@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { TextField, Button, Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import { TextField, Button, Container, Table, TableBody, TableCell, TableContainer, TableRow, Paper, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { db } from '../firebase';
 import { collection, addDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import { useAuth } from '../contexts/authContext';
 
 function AddFlat() {
     const [flatData, setFlatData] = useState({
@@ -17,8 +16,26 @@ function AddFlat() {
         rentPrice: '',
         dateAvailable: '',
     });
-
+    const {currentUser} = useAuth()
+    const [errors, setErrors] = useState({});
+    const [isFormValid, setIsFormValid] = useState(false);
+    const [isSubmitted, setIsSubmitted] = useState(false);
     const navigate = useNavigate();
+
+    const validate = () => {
+        let tempErrors = {};
+        tempErrors.city = flatData.city ? "" : "City is required.";
+        tempErrors.streetName = flatData.streetName ? "" : "Street Name is required.";
+        tempErrors.streetNumber = flatData.streetNumber ? "" : "Street Number is required.";
+        tempErrors.areaSize = flatData.areaSize && !isNaN(flatData.areaSize) ? "" : "Area Size is required and must be a number.";
+        tempErrors.ac = flatData.ac ? "" : "AC status is required.";
+        tempErrors.yearBuilt = flatData.yearBuilt && !isNaN(flatData.yearBuilt) ? "" : "Year Built is required and must be a number.";
+        tempErrors.rentPrice = flatData.rentPrice && !isNaN(flatData.rentPrice) ? "" : "Rent Price is required and must be a number.";
+        tempErrors.dateAvailable = flatData.dateAvailable ? "" : "Date Available is required.";
+        
+        setErrors(tempErrors);
+        return Object.values(tempErrors).every(x => x === "");
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -37,12 +54,22 @@ function AddFlat() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            const flatsCollection = collection(db, 'flats');
-            await addDoc(flatsCollection, flatData);
-            navigate('/all-flats');
-        } catch (error) {
-            console.error("Error adding flat: ", error);
+        setIsSubmitted(true);  // Setăm că formularul a fost trimis
+        if (validate()) {
+            setIsFormValid(true);
+            try {
+                if(currentUser){
+                const flatData1={...flatData,ownerUid:currentUser.uid}
+                
+                const flatsCollection = collection(db, 'flats');
+                await addDoc(flatsCollection, flatData1); 
+             }
+                navigate('/all-flats');
+            } catch (error) {
+                console.error("Error adding flat: ", error);
+            }
+        } else {
+            setIsFormValid(false);
         }
     };
 
@@ -59,6 +86,8 @@ function AddFlat() {
                                     onChange={handleChange}
                                     sx={{ width: '100%', margin: 0 }}
                                     InputProps={{ sx: { height: '40px' } }}
+                                    error={isSubmitted && !!errors.city}
+                                    helperText={isSubmitted && errors.city}
                                 />
                             </TableCell>
                         </TableRow>
@@ -70,6 +99,8 @@ function AddFlat() {
                                     onChange={handleChange}
                                     sx={{ width: '100%', margin: 0 }}
                                     InputProps={{ sx: { height: '40px' } }}
+                                    error={isSubmitted && !!errors.streetName}
+                                    helperText={isSubmitted && errors.streetName}
                                 />
                             </TableCell>
                         </TableRow>
@@ -81,6 +112,8 @@ function AddFlat() {
                                     onChange={handleChange}
                                     sx={{ width: '100%', margin: 0 }}
                                     InputProps={{ sx: { height: '40px' } }}
+                                    error={isSubmitted && !!errors.streetNumber}
+                                    helperText={isSubmitted && errors.streetNumber}
                                 />
                             </TableCell>
                         </TableRow>
@@ -92,6 +125,8 @@ function AddFlat() {
                                     onChange={handleChange}
                                     sx={{ width: '100%', margin: 0 }}
                                     InputProps={{ sx: { height: '40px' } }}
+                                    error={isSubmitted && !!errors.areaSize}
+                                    helperText={isSubmitted && errors.areaSize}
                                 />
                             </TableCell>
                         </TableRow>
@@ -107,6 +142,7 @@ function AddFlat() {
                                     <ToggleButton value="yes" sx={{ height: '30px' }}>Has AC</ToggleButton>
                                     <ToggleButton value="no" sx={{ height: '30px' }}>No AC</ToggleButton>
                                 </ToggleButtonGroup>
+                                {isSubmitted && errors.ac && <div style={{ color: 'red', fontSize: '12px' }}>{errors.ac}</div>}
                             </TableCell>
                         </TableRow>
                         <TableRow sx={{ height: '40px' }}>
@@ -117,6 +153,8 @@ function AddFlat() {
                                     onChange={handleChange}
                                     sx={{ width: '100%', margin: 0 }}
                                     InputProps={{ sx: { height: '40px' } }}
+                                    error={isSubmitted && !!errors.yearBuilt}
+                                    helperText={isSubmitted && errors.yearBuilt}
                                 />
                             </TableCell>
                         </TableRow>
@@ -128,6 +166,8 @@ function AddFlat() {
                                     onChange={handleChange}
                                     sx={{ width: '100%', margin: 0 }}
                                     InputProps={{ sx: { height: '40px' } }}
+                                    error={isSubmitted && !!errors.rentPrice}
+                                    helperText={isSubmitted && errors.rentPrice}
                                 />
                             </TableCell>
                         </TableRow>
@@ -143,6 +183,8 @@ function AddFlat() {
                                     onChange={handleDateChange}
                                     sx={{ marginBottom: 0, width: '100%' }}
                                     InputProps={{ sx: { height: '40px' } }}
+                                    error={isSubmitted && !!errors.dateAvailable}
+                                    helperText={isSubmitted && errors.dateAvailable}
                                 />
                             </TableCell>
                         </TableRow>
@@ -157,6 +199,7 @@ function AddFlat() {
                                         height: '30px',
                                         marginTop: 1
                                     }}
+                                    disabled={isFormValid}
                                 >
                                     Save
                                 </Button>
@@ -170,3 +213,6 @@ function AddFlat() {
 }
 
 export default AddFlat;
+
+
+//test

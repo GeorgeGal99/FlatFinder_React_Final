@@ -116,7 +116,7 @@ function AllFlats() {
                                 <TableCell>{flat.dateAvailable}</TableCell>
                                 <TableCell>
                                     <IconButton onClick={() => handleFavorite(flat.id)}>
-                                        {favoriteFlats.includes(flat.id) ? <Favorite sx={{ color: 'blue' }} /> : <FavoriteBorder />}
+                                        {favoriteFlats.includes(flat.id) ? <Favorite sx={{ color: 'yellow' }} /> : <FavoriteBorder />}
                                     </IconButton>
                                     <IconButton>
                                         <Send />
@@ -132,6 +132,3 @@ function AllFlats() {
 }
 
 export default AllFlats;
-
-
-//test
