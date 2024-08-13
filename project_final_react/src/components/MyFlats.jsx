@@ -15,6 +15,9 @@ function MyFlats() {
             const flatsSnapshot = await getDocs(q);
             const flatsList = flatsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             setFlats(flatsList);
+            // console.log(flatsList)
+            // console.log(flatsSnapshot)
+            console.log(flatsCollection.ownerUid)
         };
 
         fetchFlats();
