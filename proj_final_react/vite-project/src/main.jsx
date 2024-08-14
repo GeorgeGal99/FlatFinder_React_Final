@@ -5,13 +5,13 @@ import { AuthProvider } from './contexts/authContext.jsx';
 import Login from './components/login.jsx';
 import Register from './components/register.jsx';
 import Logout from './components/Logout.jsx';
-import Home from './components/Home';
-import AllFlats from './components/AllFlats';
-import MyFlats from './components/MyFlats';
-import FavoriteFlats from './components/FavoriteFlats';
-import AddFlat from './components/AddFlat';
-import Messages from './components/Messages';
-import MyProfiles from './components/MyProfiles';
+import Home from './components/Home.jsx';
+import AllFlats from './components/AllFlats.jsx';
+import MyFlats from './components/MyFlats.jsx';
+import FavoriteFlats from './components/FavoriteFlats.jsx';
+import AddFlat from './components/AddFlat.jsx';
+import Messages from './components/Messages.jsx';
+import MyProfiles from './components/MyProfiles.jsx';
 import UsersProfiles from './components/UsersProfiles.jsx'
 import AllUsers from './components/AllUsers.jsx';
 
