@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Button, Box } from '@mui/material';
-import { Favorite, FavoriteBorder, Send } from '@mui/icons-material'; // Import pictogramele Material UI
+import { Box, TextField, IconButton } from '@mui/material';
+import { Favorite, FavoriteBorder, Send } from '@mui/icons-material';
 import { db } from '../firebase';
 import { collection, getDocs, doc, setDoc, getDoc, deleteDoc } from 'firebase/firestore';
 import { useAuth } from '../contexts/authContext';
+import { DataGrid } from '@mui/x-data-grid';
 
 function AllFlats() {
     const [flats, setFlats] = useState([]);
+    const [filteredFlats, setFilteredFlats] = useState([]);
     const [favoriteFlats, setFavoriteFlats] = useState([]);
     const { currentUser } = useAuth();
-    const [sortOrder, setSortOrder] = useState({ rentPrice: null, areaSize: null, city: null });
 
     useEffect(() => {
         const fetchFlats = async () => {
@@ -17,6 +18,7 @@ function AllFlats() {
             const flatsSnapshot = await getDocs(flatsCollection);
             const flatsList = flatsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             setFlats(flatsList);
+            setFilteredFlats(flatsList);
         };
 
         const fetchFavorites = async () => {
@@ -49,84 +51,63 @@ function AllFlats() {
         }
     };
 
-    const handleSort = (field) => {
-        const order = sortOrder[field] === 'asc' ? 'desc' : 'asc';
-        const sortedFlats = [...flats].sort((a, b) => {
-            if (order === 'asc') {
-                return a[field] > b[field] ? 1 : -1;
-            } else {
-                return a[field] < b[field] ? 1 : -1;
-            }
-        });
-        setSortOrder({ ...sortOrder, [field]: order });
-        setFlats(sortedFlats);
+    const handleSearch = (event) => {
+        const searchTerm = event.target.value.toLowerCase();
+        const results = flats.filter(flat =>
+            flat.city.toLowerCase().includes(searchTerm) ||
+            flat.streetName.toLowerCase().includes(searchTerm) ||
+            flat.rentPrice.toString().includes(searchTerm) ||
+            flat.areaSize.toString().includes(searchTerm)
+        );
+        setFilteredFlats(results);
     };
+
+    const columns = [
+        { field: 'city', headerName: 'City', width: 150 },
+        { field: 'streetName', headerName: 'Street Name', width: 150 },
+        { field: 'streetNumber', headerName: 'Street Number', width: 120 },
+        { field: 'areaSize', headerName: 'Area Size', width: 120 },
+        { field: 'ac', headerName: 'AC', width: 100 },
+        { field: 'yearBuilt', headerName: 'Year Built', width: 120 },
+        { field: 'rentPrice', headerName: 'Rent Price $', width: 120 },
+        { field: 'dateAvailable', headerName: 'Date Available', width: 150 },
+        { field: 'ownerEmail', headerName: 'Email Owner', width: 150 },
+        {
+            field: 'actions',
+            headerName: 'Actions',
+            width: 150,
+            renderCell: (params) => (
+                <>
+                    <IconButton onClick={() => handleFavorite(params.row.id)}>
+                        {favoriteFlats.includes(params.row.id) ? <Favorite sx={{ color: 'red' }} /> : <FavoriteBorder />}
+                    </IconButton>
+                    <IconButton
+                        onClick={() => window.location.href = `mailto:${params.row.ownerEmail}`} // Trimite email către proprietar
+                    >
+                        <Send />
+                    </IconButton>
+                </>
+            ),
+        },
+    ];
 
     return (
         <Box>
-            <Box display="flex" justifyContent="flex-end" mb={2}>
-                <Button
-                    variant="contained"
-                    sx={{ width: '50px', backgroundColor: 'lightblue' }}
-                    onClick={() => handleSort('rentPrice')}
-                >
-                    $
-                </Button>
-                <Button
-                    variant="contained"
-                    sx={{ width: '50px', backgroundColor: 'lightblue', ml: 1 }}
-                    onClick={() => handleSort('areaSize')}
-                >
-                    m²
-                </Button>
-                <Button
-                    variant="contained"
-                    sx={{ width: '50px', backgroundColor: 'lightblue', ml: 1 }}
-                    onClick={() => handleSort('city')}
-                >
-                    City
-                </Button>
-            </Box>
+            <TextField
+                variant="outlined"
+                placeholder="Search..."
+                onChange={handleSearch}
+                sx={{ marginBottom: 2, width: '300px' }}
+            />
 
-            <TableContainer component={Paper}>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>City</TableCell>
-                            <TableCell>Street Name</TableCell>
-                            <TableCell>Street Number</TableCell>
-                            <TableCell>Area Size</TableCell>
-                            <TableCell>AC</TableCell>
-                            <TableCell>Year Built</TableCell>
-                            <TableCell>Rent Price $</TableCell>
-                            <TableCell>Date Available</TableCell>
-                            <TableCell>Actions</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {flats.map(flat => (
-                            <TableRow key={flat.id}>
-                                <TableCell>{flat.city}</TableCell>
-                                <TableCell>{flat.streetName}</TableCell>
-                                <TableCell>{flat.streetNumber}</TableCell>
-                                <TableCell>{flat.areaSize}</TableCell>
-                                <TableCell>{flat.ac}</TableCell>
-                                <TableCell>{flat.yearBuilt}</TableCell>
-                                <TableCell>{flat.rentPrice}</TableCell>
-                                <TableCell>{flat.dateAvailable}</TableCell>
-                                <TableCell>
-                                    <IconButton onClick={() => handleFavorite(flat.id)}>
-                                        {favoriteFlats.includes(flat.id) ? <Favorite sx={{ color: 'yellow' }} /> : <FavoriteBorder />}
-                                    </IconButton>
-                                    <IconButton>
-                                        <Send />
-                                    </IconButton>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+            <DataGrid
+                rows={filteredFlats}
+                columns={columns}
+                pageSize={10}
+                rowsPerPageOptions={[10]}
+                disableSelectionOnClick
+                autoHeight
+            />
         </Box>
     );
 }

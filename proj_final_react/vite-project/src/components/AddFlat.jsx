@@ -15,8 +15,9 @@ function AddFlat() {
         yearBuilt: '',
         rentPrice: '',
         dateAvailable: '',
+        ownerEmail: '',
     });
-    const {currentUser} = useAuth()
+    const { currentUser } = useAuth()
     const [errors, setErrors] = useState({});
     const [isFormValid, setIsFormValid] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -32,7 +33,8 @@ function AddFlat() {
         tempErrors.yearBuilt = flatData.yearBuilt && !isNaN(flatData.yearBuilt) ? "" : "Year Built is required and must be a number.";
         tempErrors.rentPrice = flatData.rentPrice && !isNaN(flatData.rentPrice) ? "" : "Rent Price is required and must be a number.";
         tempErrors.dateAvailable = flatData.dateAvailable ? "" : "Date Available is required.";
-        
+        tempErrors.ownerEmail = flatData.ownerEmail ? "" : "Email is required.";
+
         setErrors(tempErrors);
         return Object.values(tempErrors).every(x => x === "");
     };
@@ -58,12 +60,12 @@ function AddFlat() {
         if (validate()) {
             setIsFormValid(true);
             try {
-                if(currentUser){
-                const flatData1={...flatData,ownerUid:currentUser.uid}
-                
-                const flatsCollection = collection(db, 'flats');
-                await addDoc(flatsCollection, flatData1); 
-             }
+                if (currentUser) {
+                    const flatData1 = { ...flatData, ownerUid: currentUser.uid }
+
+                    const flatsCollection = collection(db, 'flats');
+                    await addDoc(flatsCollection, flatData1);
+                }
                 navigate('/all-flats');
             } catch (error) {
                 console.error("Error adding flat: ", error);
@@ -91,6 +93,7 @@ function AddFlat() {
                                 />
                             </TableCell>
                         </TableRow>
+
                         <TableRow sx={{ height: '40px' }}>
                             <TableCell sx={{ padding: '10px 8px' }}>
                                 <TextField
@@ -185,6 +188,20 @@ function AddFlat() {
                                     InputProps={{ sx: { height: '40px' } }}
                                     error={isSubmitted && !!errors.dateAvailable}
                                     helperText={isSubmitted && errors.dateAvailable}
+                                />
+                            </TableCell>
+                        </TableRow>
+
+                        <TableRow sx={{ height: '40px' }}>
+                            <TableCell sx={{ padding: '10px 8px' }}>
+                                <TextField
+                                    name="ownerEmail"
+                                    label="Email Owner"
+                                    onChange={handleChange}
+                                    sx={{ width: '100%', margin: 0 }}
+                                    InputProps={{ sx: { height: '40px' } }}
+                                    error={isSubmitted && !!errors.ownerEmail}
+                                    helperText={isSubmitted && errors.ownerEmail}
                                 />
                             </TableCell>
                         </TableRow>
