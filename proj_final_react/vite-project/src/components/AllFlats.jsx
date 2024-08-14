@@ -63,15 +63,15 @@ function AllFlats() {
     };
 
     const columns = [
-        { field: 'city', headerName: 'City', width: 150 },
-        { field: 'streetName', headerName: 'Street Name', width: 150 },
-        { field: 'streetNumber', headerName: 'Street Number', width: 120 },
+        { field: 'city', headerName: 'City', width: 200 },
+        { field: 'streetName', headerName: 'Street Name', width: 200 },
+        { field: 'streetNumber', headerName: 'Street Number', width: 150 },
         { field: 'areaSize', headerName: 'Area Size', width: 120 },
         { field: 'ac', headerName: 'AC', width: 100 },
         { field: 'yearBuilt', headerName: 'Year Built', width: 120 },
         { field: 'rentPrice', headerName: 'Rent Price $', width: 120 },
         { field: 'dateAvailable', headerName: 'Date Available', width: 150 },
-        { field: 'ownerEmail', headerName: 'Email Owner', width: 150 },
+        { field: 'ownerEmail', headerName: 'Email Owner', width: 200 },
         {
             field: 'actions',
             headerName: 'Actions',
