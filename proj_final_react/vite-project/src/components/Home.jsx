@@ -1,109 +1,14 @@
-// import React, { useState, useEffect } from "react";
-// import { Button, Toolbar, AppBar, Typography } from "@mui/material";
-// import { useAuth } from "../contexts/authContext";
-// import { useNavigate, Outlet, Link } from "react-router-dom";
-// import Header from "./Header";
-// import { db } from "../firebase";
-// import { collection, getDocs, doc, deleteDoc, getDoc } from "firebase/firestore";
-
-// function Home() {
-//     const navigate = useNavigate();
-//     const { currentUser } = useAuth();
-
-//     // Define state for isAdmin
-//     const [isAdmin, setIsAdmin] = useState(false);
-
-//     useEffect(() => {
-//         if (!currentUser) {
-//             navigate('/login');
-//         } else {
-//             checkAdminStatus();
-//             fetchUsers();
-//         }
-//     }, [currentUser, navigate]);
-
-//     const fetchUsers = async () => {
-//         const usersCollection = collection(db, "users");
-//         const usersSnapshot = await getDocs(usersCollection);
-//         const usersList = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-//         // setUsers(usersList);
-//     };
-
-//     const checkAdminStatus = async () => {
-//         const userDoc = doc(db, "users", currentUser.uid);
-//         const userSnapshot = await getDoc(userDoc);
-//         const userData = userSnapshot.data();
-//         if (userData) {
-//             setIsAdmin(userData.isAdmin); // Now this function is defined and will update the state
-//         }
-//     };
-
-
-//     return (
-//         <div>
-//             <Header />
-//             <AppBar
-//                 position="static"
-//                 sx={{
-//                     backgroundColor: 'transparent', // AppBar transparent
-//                     boxShadow: 'none' // Îndepărtează umbra
-//                 }}
-//             >
-//                 <Toolbar>
-
-//                     <Button
-//                         color="inherit"
-//                         component={Link}
-//                         to="/all-flats"
-//                         sx={{ color: 'black' }} // Textul butonului în negru
-//                     >
-//                         All Flats
-//                     </Button>
-//                     <Button
-//                         color="inherit"
-//                         component={Link}
-//                         to="/my-flats"
-//                         sx={{ color: 'black' }} // Textul butonului în negru
-//                     >
-//                         My Flats
-//                     </Button>
-//                     <Button
-//                         color="inherit"
-//                         component={Link}
-//                         to="/favorite-flats"
-//                         sx={{ color: 'black' }} // Textul butonului în negru
-//                     >
-//                         Favorite Flats
-//                     </Button>
-//                     <Button
-//                         color="inherit"
-//                         component={Link}
-//                         to="/add-flat"
-//                         sx={{ color: 'black' }} // Textul butonului în negru
-//                     >
-//                         Add Flat
-//                     </Button>
-//                 </Toolbar>
-//             </AppBar>
-//             <div style={{ padding: '20px' }}>
-//                 <Outlet />
-//             </div>
-//         </div>
-//     );
-// }
-
-// export default Home;
-
-
-
 import React, { useState, useEffect } from "react";
-import { Button, Toolbar, AppBar, Typography } from "@mui/material";
+import { Button, Toolbar, AppBar } from "@mui/material";
 import { useAuth } from "../contexts/authContext";
 import { useNavigate, Outlet, Link, useLocation } from "react-router-dom"; // Importă useLocation
 import Header from "./Header";
 import { db } from "../firebase";
 import { collection, getDocs, doc, getDoc } from "firebase/firestore";
 import AllFlats from "./AllFlats";
+import BACKGROUND_URL from "../assets/tokyo.jpg"
+
+
 
 function Home() {
     const navigate = useNavigate();
@@ -149,8 +54,13 @@ function Home() {
     };
 
     return (
+
         <div>
-            <Header />
+
+
+            < Header />
+
+
             <AppBar
                 position="static"
                 sx={{
@@ -189,8 +99,11 @@ function Home() {
                 <Outlet />
             </div>
             {showAllFlats && <AllFlats />} {/* Afișează AllFlats doar dacă showAllFlats este true */}
-        </div>
+        </div >
     );
 }
 
 export default Home;
+
+
+
