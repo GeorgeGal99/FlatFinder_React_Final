@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import { Delete, Reply } from '@mui/icons-material';
 import { db } from '../firebase';
-import { collection, getDocs, deleteDoc, doc, addDoc } from 'firebase/firestore';
+import { collection, getDocs, deleteDoc, doc, query, where, addDoc } from 'firebase/firestore';
 import { useAuth } from '../contexts/authContext';
 import Header from './Header';
 
@@ -16,11 +16,13 @@ function Messages() {
     useEffect(() => {
         const fetchMessages = async () => {
             try {
+
                 const messagesCollection = collection(db, 'messages');
-                const messagesSnapshot = await getDocs(messagesCollection);
+                const q = query(messagesCollection, where('recipientUid', '==', currentUser.uid));
+                const messagesSnapshot = await getDocs(q);
                 const messagesList = messagesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 setMessages(messagesList);
-                setMessages(messagesList);
+
             } catch (error) {
                 console.error('Error fetching messages:', error);
             }
@@ -41,9 +43,6 @@ function Messages() {
 
 
 
-
-
-
     const handleSendReply = async () => {
         try {
             // Verifică dacă recipientUid este definit
@@ -58,12 +57,21 @@ function Messages() {
                 return; // Nu trimite mesajul dacă conținutul mesajului este invalid
             }
 
-            handleClose();
+            // Trimiterea mesajului către Firebase
+            await addDoc(collection(db, 'messages'), {
+                senderUid: currentUser.uid,
+                recipientUid: recipientUid,
+                message: replyMessage,
+                timestamp: new Date(),
+            });
+
+            handleClose(); // Închide modalul
             console.log('Reply sent successfully');
         } catch (error) {
             console.error('Error sending message:', error);
         }
     };
+
     const handleReply = (senderUid) => {
         // Asigură-te că `senderUid` este setat corect
         if (!senderUid) {
