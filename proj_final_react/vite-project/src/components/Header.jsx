@@ -12,7 +12,7 @@ function Header() {
             <Toolbar>
                 {userLoggedIn && (
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                        FlatFinder Welcome, {currentUser.email}
+                        FlatFinder Welcome, {currentUser.email} {isAdmin && '(Admin)'}
                     </Typography>
                 )}
                 <Button color="inherit" component={Link} to="/">
@@ -20,7 +20,7 @@ function Header() {
                 </Button>
                 {userLoggedIn && (
                     <>
-                        <Button color="inherit" component={Link} to="/my-profiles">
+                          <Button color="inherit" component={Link} to="/my-profiles">
                             My Profile
                         </Button>
 
@@ -43,4 +43,3 @@ function Header() {
 }
 
 export default Header;
-
