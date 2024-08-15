@@ -5,6 +5,7 @@ import { collection, addDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/authContext';
 
+
 function AddFlat() {
     const [flatData, setFlatData] = useState({
         city: '',
@@ -219,4 +220,3 @@ function AddFlat() {
 export default AddFlat;
 
 
-//test

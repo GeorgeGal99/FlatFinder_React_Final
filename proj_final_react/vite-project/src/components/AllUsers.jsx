@@ -3,7 +3,7 @@ import { Box, IconButton } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { Delete } from '@mui/icons-material';
 import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
-import { db } from '../firebase'; // Asigură-te că acest import este corect
+import { db } from '../firebase';
 import Header from './Header';
 
 
@@ -40,9 +40,9 @@ function AllUsers() {
     };
 
     const columns = [
-        { field: 'displayName', headerName: 'Full Name', width: 200 },
-        { field: 'email', headerName: 'Email', width: 250 },
-        { field: 'role', headerName: 'Role', width: 150 }, // presupunând că ai un câmp de rol în Firebase
+        // { field: 'displayName', headerName: 'Full Name', width: 200 },
+        { field: 'email', headerName: 'Email', width: 550 },
+        // { field: 'role', headerName: 'Role', width: 150 }, // presupunând că ai un câmp de rol în Firebase
         {
             field: 'actions',
             headerName: 'Actions',
