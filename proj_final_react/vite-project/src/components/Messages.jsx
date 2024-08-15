@@ -15,12 +15,15 @@ function Messages() {
 
     useEffect(() => {
         const fetchMessages = async () => {
-            const messagesCollection = collection(db, 'messages');
-            const messagesSnapshot = await getDocs(messagesCollection);
-            const messagesList = messagesSnapshot.docs
-                .filter(doc => doc.data().recipientUid === currentUser.uid)
-                .map(doc => ({ id: doc.id, ...doc.data() }));
-            setMessages(messagesList);
+            try {
+                const messagesCollection = collection(db, 'messages');
+                const messagesSnapshot = await getDocs(messagesCollection);
+                const messagesList = messagesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                setMessages(messagesList);
+                setMessages(messagesList);
+            } catch (error) {
+                console.error('Error fetching messages:', error);
+            }
         };
 
         fetchMessages();
@@ -38,24 +41,7 @@ function Messages() {
 
 
 
-    // const handleSendReply = async () => {
-    //     try {
-    //         if (!recipientUid) {
-    //             console.error('recipientUid is undefined');
-    //             return;
-    //         }
-    //         await addDoc(collection(db, 'messages'), {
-    //             senderUid: currentUser.uid,  // UID-ul utilizatorului curent
-    //             recipientUid: recipientUid,  // UID-ul utilizatorului care a trimis mesajul original
-    //             message: replyMessage,
-    //             timestamp: new Date(),
-    //         });
-    //         handleClose();
-    //         console.log('Reply sent successfully');
-    //     } catch (error) {
-    //         console.error('Error sending message:', error);
-    //     }
-    // };
+
 
 
     const handleSendReply = async () => {
@@ -71,14 +57,6 @@ function Messages() {
                 console.error('Message content is undefined or empty.');
                 return; // Nu trimite mesajul dacă conținutul mesajului este invalid
             }
-
-            // Adaugă documentul în colecția 'messages'
-            await addDoc(collection(db, 'messages'), {
-                senderUid: currentUser.uid,  // UID-ul utilizatorului curent
-                recipientUid: recipientUid,  // UID-ul utilizatorului care a trimis mesajul original
-                message: replyMessage,
-                timestamp: new Date(),
-            });
 
             handleClose();
             console.log('Reply sent successfully');

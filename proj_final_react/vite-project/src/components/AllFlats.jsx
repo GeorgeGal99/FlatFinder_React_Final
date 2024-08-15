@@ -200,12 +200,15 @@ function AllFlats() {
 
     const handleSend = async () => {
         try {
+
             await addDoc(collection(db, 'messages'), {
                 senderUid: currentUser.uid,
                 recipientUid: recipientUid,
                 message: message,
                 timestamp: new Date(),
+
             });
+
             handleClose();
             console.log('Message sent successfully');
         } catch (error) {
@@ -267,9 +270,16 @@ function AllFlats() {
                     <IconButton onClick={() => handleFavorite(params.row.id)}>
                         {favoriteFlats.includes(params.row.id) ? <Favorite sx={{ color: 'red' }} /> : <FavoriteBorder />}
                     </IconButton>
-                    <IconButton onClick={() => handleSendMessage(params.row.email)}>
+
+                    <IconButton
+                        onClick={() => {
+                            setRecipientUid(params.row.ownerUid); // se preia  UID-ul destinatarului
+                            setOpen(true); // Deschide modalul de trimitere a mesajului
+                        }}
+                    >
                         <Send />
                     </IconButton>
+
                     {isAdmin && (
                         <>
                             <IconButton onClick={() => handleEditFlat(params.row)}>
