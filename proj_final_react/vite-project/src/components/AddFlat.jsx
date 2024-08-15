@@ -33,7 +33,7 @@ function AddFlat() {
         tempErrors.yearBuilt = flatData.yearBuilt && !isNaN(flatData.yearBuilt) ? "" : "Year Built is required and must be a number.";
         tempErrors.rentPrice = flatData.rentPrice && !isNaN(flatData.rentPrice) ? "" : "Rent Price is required and must be a number.";
         tempErrors.dateAvailable = flatData.dateAvailable ? "" : "Date Available is required.";
-        tempErrors.ownerEmail = flatData.ownerEmail ? "" : "Email is required.";
+
 
         setErrors(tempErrors);
         return Object.values(tempErrors).every(x => x === "");
@@ -192,19 +192,6 @@ function AddFlat() {
                             </TableCell>
                         </TableRow>
 
-                        <TableRow sx={{ height: '40px' }}>
-                            <TableCell sx={{ padding: '10px 8px' }}>
-                                <TextField
-                                    name="ownerEmail"
-                                    label="Email Owner"
-                                    onChange={handleChange}
-                                    sx={{ width: '100%', margin: 0 }}
-                                    InputProps={{ sx: { height: '40px' } }}
-                                    error={isSubmitted && !!errors.ownerEmail}
-                                    helperText={isSubmitted && errors.ownerEmail}
-                                />
-                            </TableCell>
-                        </TableRow>
                         <TableRow>
                             <TableCell align="center" sx={{ padding: '4px 8px' }}>
                                 <Button
