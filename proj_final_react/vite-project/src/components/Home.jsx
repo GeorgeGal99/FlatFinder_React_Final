@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Button, Toolbar, AppBar } from "@mui/material";
 import { useAuth } from "../contexts/authContext";
-import { useNavigate, Outlet, Link, useLocation } from "react-router-dom"; // Importă useLocation
+import { useNavigate, Outlet, Link, useLocation } from "react-router-dom";
 import Header from "./Header";
 import { db } from "../firebase";
 import { collection, getDocs, doc, getDoc } from "firebase/firestore";
 import AllFlats from "./AllFlats";
-import BACKGROUND_URL from "../assets/tokyo.jpg"
-
-
 
 function Home() {
     const navigate = useNavigate();
@@ -17,6 +14,7 @@ function Home() {
 
     const [isAdmin, setIsAdmin] = useState(false);
     const [showAllFlats, setShowAllFlats] = useState(true); // Controlează vizibilitatea componentei AllFlats
+    const [activeButton, setActiveButton] = useState(location.pathname); // Starea pentru butonul activ
 
     useEffect(() => {
         if (!currentUser) {
@@ -34,7 +32,10 @@ function Home() {
         } else {
             setShowAllFlats(false);
         }
-    }, [location]); // Efectul va fi declanșat de fiecare dată când se schimbă locația
+
+        // Actualizează butonul activ în funcție de locație
+        setActiveButton(location.pathname);
+    }, [location]);
 
     const fetchUsers = async () => {
         const usersCollection = collection(db, "users");
@@ -53,13 +54,19 @@ function Home() {
         }
     };
 
+    const buttonStyle = (path) => ({
+        backgroundColor: activeButton === path ? '#1976d2' : 'transparent', // Fundalul butonului activ
+        color: activeButton === path ? '#ffffff' : '#000000', // Textul butonului activ (alb) sau negru
+        border: '1px solid #1976d2', // Conturul butonului
+        '&:hover': {
+            backgroundColor: activeButton === path ? '#1565c0' : 'rgba(0, 0, 0, 0.1)', // Fundal la hover
+            color: activeButton === path ? '#ffffff' : '#000000', // Textul la hover
+        }
+    });
+
     return (
-
         <div>
-
-
-            < Header />
-
+            <Header />
 
             <AppBar
                 position="static"
@@ -73,7 +80,8 @@ function Home() {
                         color="inherit"
                         component={Link}
                         to="/my-flats"
-                        sx={{ color: 'black' }}
+                        sx={buttonStyle('/my-flats')}
+                        onClick={() => setActiveButton('/my-flats')}
                     >
                         My Flats
                     </Button>
@@ -81,7 +89,8 @@ function Home() {
                         color="inherit"
                         component={Link}
                         to="/favorite-flats"
-                        sx={{ color: 'black' }}
+                        sx={buttonStyle('/favorite-flats')}
+                        onClick={() => setActiveButton('/favorite-flats')}
                     >
                         Favorite Flats
                     </Button>
@@ -89,7 +98,8 @@ function Home() {
                         color="inherit"
                         component={Link}
                         to="/add-flat"
-                        sx={{ color: 'black' }}
+                        sx={buttonStyle('/add-flat')}
+                        onClick={() => setActiveButton('/add-flat')}
                     >
                         Add Flat
                     </Button>
@@ -104,6 +114,3 @@ function Home() {
 }
 
 export default Home;
-
-
-

@@ -15,8 +15,14 @@ function Header() {
                         FlatFinder Welcome, {currentUser.email} {isAdmin && '(Admin)'}
                     </Typography>
                 )}
+
+
                 <Button color="inherit" component={Link} to="/">
                     Home
+                </Button>
+                
+                <Button color="inherit" component={Link} to="/">
+                    All Flats
                 </Button>
                 {userLoggedIn && (
                     <>
