@@ -76,6 +76,15 @@ function Home() {
                 }}
             >
                 <Toolbar>
+                    < Button
+                        color="inherit"
+                        component={Link}
+                        to="/all-flats"
+                        sx={buttonStyle('/all-flats')}
+                        onClick={() => setActiveButton('/all-flats')}
+                    >
+                        All Flats
+                    </Button>
                     <Button
                         color="inherit"
                         component={Link}

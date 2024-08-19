@@ -20,13 +20,9 @@ function Header() {
                 <Button color="inherit" component={Link} to="/">
                     Home
                 </Button>
-                
-                <Button color="inherit" component={Link} to="/">
-                    All Flats
-                </Button>
                 {userLoggedIn && (
                     <>
-                          <Button color="inherit" component={Link} to="/my-profiles">
+                        <Button color="inherit" component={Link} to="/my-profiles">
                             My Profile
                         </Button>
 

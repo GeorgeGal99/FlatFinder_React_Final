@@ -1,7 +1,7 @@
 
 
 import React, { useState } from 'react';
-import { Button, Modal, Box, Typography } from '@mui/material';
+import { Button, Modal } from '@mui/material';
 import { doSignOut } from '../auth';
 import { useNavigate } from 'react-router-dom';
 
@@ -48,8 +48,8 @@ const Logout = () => {
                     borderRadius: '8px',  // Colțuri rotunjite pentru aspect modern
                     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)'  // Umbră pentru a adăuga efect de profunzime
                 }}>
-                    <h2 id="logout-modal-title">Confirmare Logout</h2>
-                    <p id="logout-modal-description">Ești sigur că vrei să te deconectezi?</p>
+                    <h2 id="logout-modal-title">Confirmation Logout</h2>
+                    <p id="logout-modal-description"> Are you sure you want to Logout?</p>
                     <Button
                         onClick={handleLogout}
                         style={{

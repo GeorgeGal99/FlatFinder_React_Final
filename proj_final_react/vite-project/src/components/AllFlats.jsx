@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Box, TextField, IconButton, Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material';
+import {
+    Box, TextField, IconButton, Dialog, DialogActions,
+    DialogContent, DialogTitle, Button, Checkbox
+} from '@mui/material';
 import { Favorite, FavoriteBorder, Send, Edit, Delete } from '@mui/icons-material';
 import { db } from '../firebase';
 import { collection, getDocs, doc, addDoc, setDoc, getDoc, deleteDoc, updateDoc } from 'firebase/firestore';
@@ -11,7 +14,7 @@ function AllFlats() {
     const [filteredFlats, setFilteredFlats] = useState([]);
     const [favoriteFlats, setFavoriteFlats] = useState([]);
     const { currentUser, isAdmin } = useAuth(); // Asigură-te că `isAdmin` este returnat din `useAuth`
-    const [open, setOpen] = useState(false);
+    const [open, setOpen, isFormValid] = useState(false);
     const [message, setMessage] = useState('');
     const [recipientUid, setRecipientUid] = useState('');
     const [editOpen, setEditOpen] = useState(false); // Stare pentru modalul de editare
@@ -56,16 +59,16 @@ function AllFlats() {
         }
     };
 
-    const handleSearch = (event) => {
-        const searchTerm = event.target.value.toLowerCase();
-        const results = flats.filter(flat =>
-            flat.city.toLowerCase().includes(searchTerm) ||
-            flat.streetName.toLowerCase().includes(searchTerm) ||
-            flat.rentPrice.toString().includes(searchTerm) ||
-            flat.areaSize.toString().includes(searchTerm)
-        );
-        setFilteredFlats(results);
-    };
+    // const handleSearch = (event) => {
+    //     const searchTerm = event.target.value.toLowerCase();
+    //     const results = flats.filter(flat =>
+    //         flat.city.toLowerCase().includes(searchTerm) ||
+    //         flat.streetName.toLowerCase().includes(searchTerm) ||
+    //         flat.rentPrice.toString().includes(searchTerm) ||
+    //         flat.areaSize.toString().includes(searchTerm)
+    //     );
+    //     setFilteredFlats(results);
+    // };
 
 
     const handleClose = () => {
@@ -180,12 +183,12 @@ function AllFlats() {
 
     return (
         <Box>
-            <TextField
+            {/* <TextField
                 variant="outlined"
                 placeholder="Search..."
                 onChange={handleSearch}
                 sx={{ marginBottom: 2, width: '300px' }}
-            />
+            /> */}
 
             <DataGrid
                 rows={filteredFlats}
@@ -221,7 +224,6 @@ function AllFlats() {
                 </DialogActions>
             </Dialog>
 
-            {/* Modal pentru editarea unui flat */}
             {selectedFlat && (
                 <Dialog open={editOpen} onClose={handleEditClose}>
                     <DialogTitle>Edit Flat</DialogTitle>
@@ -272,17 +274,58 @@ function AllFlats() {
                             value={selectedFlat.rentPrice}
                             onChange={(e) => setSelectedFlat({ ...selectedFlat, rentPrice: e.target.value })}
                         />
+
+                        {/* Data Available */}
+                        <TextField
+                            margin="dense"
+                            label="Date Available"
+                            type="date"
+                            fullWidth
+                            variant="outlined"
+                            value={selectedFlat.dateAvailable}
+                            onChange={(e) => setSelectedFlat({ ...selectedFlat, dateAvailable: e.target.value })}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                        {/* Checkbox pentru Has AC */}
+                        <div style={{ display: 'flex', alignItems: 'center', marginTop: '16px' }}>
+                            <Checkbox
+                                checked={selectedFlat.ac}
+                                onChange={(e) => setSelectedFlat({ ...selectedFlat, ac: e.target.checked })}
+                                color="primary"
+                            />
+                            <label>Has AC</label>
+                        </div>
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleEditClose} color="primary">
                             Cancel
                         </Button>
-                        <Button onClick={handleUpdateFlat} color="primary">
+                        {/* <Button onClick={handleUpdateFlat} color="primary">
+                            Save
+                        </Button> */}
+
+                        <Button
+                            onClick={handleUpdateFlat}
+                            sx={{
+                                backgroundColor: 'green',
+                                color: 'white',
+                                width: '100px',
+                                height: '30px',
+                                marginTop: 1
+                            }}
+                            disabled={isFormValid}
+                        >
                             Save
                         </Button>
                     </DialogActions>
                 </Dialog>
             )}
+
+
+
+
         </Box>
     );
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
 import { db } from '../firebase';
 import { collection, query, where, getDocs, doc, deleteDoc, updateDoc, setDoc, getDoc } from 'firebase/firestore';
 import { useAuth } from '../contexts/authContext';
@@ -10,7 +10,9 @@ function MyFlats() {
     const [editOpen, setEditOpen] = useState(false);
     const [selectedFlat, setSelectedFlat] = useState(null);
     const [editedFlat, setEditedFlat] = useState({});
-    const [favoriteFlats, setFavoriteFlats] = useState(new Set()); // Set pentru flats favorite
+    const [favoriteFlats, setFavoriteFlats] = useState(new Set());
+    const [deleteOpen, setDeleteOpen] = useState(false);
+    const [flatToDelete, setFlatToDelete] = useState(null);
 
     useEffect(() => {
         const fetchFlats = async () => {
@@ -35,15 +37,24 @@ function MyFlats() {
         fetchFavorites();
     }, [currentUser.uid]);
 
-    const handleDelete = async (flatId) => {
-        if (window.confirm('Are you sure you want to delete this flat?')) {
-            try {
-                await deleteDoc(doc(db, 'flats', flatId));
-                setFlats(flats.filter(flat => flat.id !== flatId));
-                console.log('Flat deleted successfully');
-            } catch (error) {
-                console.error('Error deleting flat:', error);
-            }
+
+    // handleDelete pentru a deschide dialogul de confirmare de stergere
+    const handleDelete = (flatId) => {
+        setFlatToDelete(flatId);
+        setDeleteOpen(true);
+    };
+
+    // funcția care confirmă ștergerea
+    const confirmDelete = async () => {
+        try {
+            await deleteDoc(doc(db, 'flats', flatToDelete));
+            setFlats(flats.filter(flat => flat.id !== flatToDelete));
+            console.log('Flat deleted successfully');
+        } catch (error) {
+            console.error('Error deleting flat:', error);
+        } finally {
+            setDeleteOpen(false);
+            setFlatToDelete(null);
         }
     };
 
@@ -99,12 +110,12 @@ function MyFlats() {
     };
 
     const favoriteButtonStyle = (flatId) => ({
-        backgroundColor: favoriteFlats.has(flatId) ? '#1976d2' : 'transparent', // Fundal activizat pentru butonul favorit
-        color: favoriteFlats.has(flatId) ? '#ffffff' : '#000000', // Text alb pentru butonul favorit
-        border: '1px solid #1976d2', // Conturul butonului
+        backgroundColor: favoriteFlats.has(flatId) ? '#1976d2' : 'transparent',
+        color: favoriteFlats.has(flatId) ? '#ffffff' : '#000000',
+        border: '1px solid #1976d2',
         '&:hover': {
-            backgroundColor: favoriteFlats.has(flatId) ? '#1565c0' : 'rgba(0, 0, 0, 0.1)', // Fundal la hover
-            color: favoriteFlats.has(flatId) ? '#ffffff' : '#000000', // Text la hover
+            backgroundColor: favoriteFlats.has(flatId) ? '#1565c0' : 'rgba(0, 0, 0, 0.1)',
+            color: favoriteFlats.has(flatId) ? '#ffffff' : '#000000',
         }
     });
 
@@ -137,22 +148,22 @@ function MyFlats() {
                                 <TableCell>{flat.rentPrice}</TableCell>
                                 <TableCell>{flat.dateAvailable}</TableCell>
                                 <TableCell>
-                                    <Button 
-                                        variant="outlined" 
-                                        onClick={() => handleFavorite(flat.id)} 
+                                    <Button
+                                        variant="outlined"
+                                        onClick={() => handleFavorite(flat.id)}
                                         sx={favoriteButtonStyle(flat.id)}
                                     >
                                         Favorite
                                     </Button>
-                                    <Button 
-                                        variant="outlined" 
-                                        color="error" 
+                                    <Button
+                                        variant="outlined"
+                                        color="error"
                                         onClick={() => handleDelete(flat.id)}
                                     >
                                         Delete
                                     </Button>
-                                    <Button 
-                                        variant="outlined" 
+                                    <Button
+                                        variant="outlined"
                                         onClick={() => handleEditClick(flat)}
                                     >
                                         Edit
@@ -209,6 +220,7 @@ function MyFlats() {
                             value={editedFlat.areaSize || ''}
                             onChange={handleEditChange}
                         />
+
                         <TextField
                             margin="dense"
                             label="Rent Price"
@@ -241,8 +253,34 @@ function MyFlats() {
                     </DialogActions>
                 </Dialog>
             )}
+
+            {/* Dialog de confirmare stergere */}
+            <Dialog
+                open={deleteOpen}
+                onClose={() => setDeleteOpen(false)}
+                aria-labelledby="confirm-delete-dialog-title"
+                aria-describedby="confirm-delete-dialog-description"
+            >
+                <DialogTitle id="confirm-delete-dialog-title">
+                    Confirm Delete
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="confirm-delete-dialog-description">
+                        Are you sure you want to delete this flat? This action cannot be undone.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setDeleteOpen(false)} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={confirmDelete} color="error">
+                        Delete
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 }
 
 export default MyFlats;
+
