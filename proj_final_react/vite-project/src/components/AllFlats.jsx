@@ -59,18 +59,6 @@ function AllFlats() {
         }
     };
 
-    // const handleSearch = (event) => {
-    //     const searchTerm = event.target.value.toLowerCase();
-    //     const results = flats.filter(flat =>
-    //         flat.city.toLowerCase().includes(searchTerm) ||
-    //         flat.streetName.toLowerCase().includes(searchTerm) ||
-    //         flat.rentPrice.toString().includes(searchTerm) ||
-    //         flat.areaSize.toString().includes(searchTerm)
-    //     );
-    //     setFilteredFlats(results);
-    // };
-
-
     const handleClose = () => {
         setOpen(false);
         setMessage('');
@@ -79,7 +67,7 @@ function AllFlats() {
 
 
     const handleSend = async () => {
-        console.log('Sending message to:', recipientUid);
+
 
         if (!recipientUid) {
             console.error('Recipient UID is undefined. Cannot send message.');
@@ -88,10 +76,16 @@ function AllFlats() {
 
         try {
             await addDoc(collection(db, 'messages'), {
+                ownerEmail: currentUser.email,
                 senderUid: currentUser.uid,
                 recipientUid: recipientUid,
                 message: message,
                 timestamp: new Date(),
+                // flatsList: {
+                //      city: selectedFlat.city || 'Unknown',
+                //     streetName: selectedFlat.streetName || 'Unknown',
+                //     streetNumber: selectedFlat.streetNumber || 'Unknown'
+                // }
             });
             console.log('Message sent successfully');
             handleClose();
@@ -116,11 +110,16 @@ function AllFlats() {
     };
 
     const handleEditFlat = (flat) => {
+        if (!flat) {
+            console.error('Flat data is not available');
+            return;
+        }
         setSelectedFlat(flat);
         setEditOpen(true);
     };
 
     const handleEditClose = () => {
+
         setEditOpen(false);
         setSelectedFlat(null);
     };
@@ -183,13 +182,6 @@ function AllFlats() {
 
     return (
         <Box>
-            {/* <TextField
-                variant="outlined"
-                placeholder="Search..."
-                onChange={handleSearch}
-                sx={{ marginBottom: 2, width: '300px' }}
-            /> */}
-
             <DataGrid
                 rows={filteredFlats}
                 columns={columns}
