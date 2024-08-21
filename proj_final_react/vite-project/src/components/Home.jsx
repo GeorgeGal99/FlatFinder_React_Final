@@ -23,7 +23,7 @@ function Home() {
             checkAdminStatus();
             fetchUsers();
         }
-    }, [currentUser, navigate]);
+    }, []);
 
     useEffect(() => {
         // Actualizează vizibilitatea lui AllFlats în funcție de ruta curentă

@@ -20,6 +20,8 @@ function AllFlats() {
     const [editOpen, setEditOpen] = useState(false); // Stare pentru modalul de editare
     const [selectedFlat, setSelectedFlat] = useState(null); // Stare pentru anunțul selectat pentru editare
 
+
+
     useEffect(() => {
         const fetchFlats = async () => {
             const flatsCollection = collection(db, 'flats');
@@ -28,6 +30,7 @@ function AllFlats() {
             setFlats(flatsList);
             setFilteredFlats(flatsList);
         };
+
 
         const fetchFavorites = async () => {
             const favoritesCollection = collection(db, 'users', currentUser.uid, 'favorites');
@@ -39,6 +42,7 @@ function AllFlats() {
         fetchFlats();
         fetchFavorites();
     }, [currentUser]);
+
 
     const handleFavorite = async (flatId) => {
         try {
@@ -65,9 +69,7 @@ function AllFlats() {
     };
 
 
-
     const handleSend = async () => {
-
 
         if (!recipientUid) {
             console.error('Recipient UID is undefined. Cannot send message.');
@@ -81,11 +83,11 @@ function AllFlats() {
                 recipientUid: recipientUid,
                 message: message,
                 timestamp: new Date(),
-                // flatsList: {
-                //      city: selectedFlat.city || 'Unknown',
-                //     streetName: selectedFlat.streetName || 'Unknown',
-                //     streetNumber: selectedFlat.streetNumber || 'Unknown'
-                // }
+                flatsList: {
+                    city: selectedFlat.city || 'Unknown',
+                    streetName: selectedFlat.streetName || 'Unknown',
+                    streetNumber: selectedFlat.streetNumber || 'Unknown'
+                }
             });
             console.log('Message sent successfully');
             handleClose();
@@ -109,6 +111,7 @@ function AllFlats() {
         }
     };
 
+
     const handleEditFlat = (flat) => {
         if (!flat) {
             console.error('Flat data is not available');
@@ -118,11 +121,13 @@ function AllFlats() {
         setEditOpen(true);
     };
 
+
     const handleEditClose = () => {
 
         setEditOpen(false);
         setSelectedFlat(null);
     };
+
 
     const handleUpdateFlat = async () => {
         try {
@@ -136,6 +141,7 @@ function AllFlats() {
             console.error('Error updating flat:', error);
         }
     };
+
 
     const columns = [
         { field: 'city', headerName: 'City', width: 200 },
@@ -159,6 +165,7 @@ function AllFlats() {
                     <IconButton
                         onClick={() => {
                             setRecipientUid(params.row.ownerUid); // se preia  UID-ul destinatarului
+                            setSelectedFlat(params.row);
                             setOpen(true); // Deschide modalul de trimitere a mesajului
                         }}
                     >
