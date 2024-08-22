@@ -33,6 +33,7 @@ function Messages() {
                             if (flatDoc.exists()) {
                                 flatData = flatDoc.data();
                                 setSelectedFlat(flatDoc.data());
+
                             }
                         }
 
@@ -40,11 +41,10 @@ function Messages() {
                             id: docSnap.id,
                             ...messageData,
                             flat: flatData,
-
                         };
                     })
                 );
-                console.log(messagesList)
+
                 setMessages(messagesList);
             } catch (error) {
                 console.error('Error fetching messages:', error);
@@ -66,17 +66,18 @@ function Messages() {
 
 
     const handleSendReply = async () => {
+        console.log('selectedFlat:', selectedFlat);
+
 
         try {
             // Verifică dacă `currentUser` și `selectedFlat` sunt definiți
             if (!currentUser || !selectedFlat) {
                 console.error('User or selected flat is not defined.');
                 return;
+            } if (!recipientUid) {
+                console.lof('recipiend uid is undefined');
+                return;
             }
-
-
-
-
             await addDoc(collection(db, 'messages'), {
                 ownerEmail: currentUser.email,
                 senderUid: currentUser.uid,
@@ -97,15 +98,28 @@ function Messages() {
             console.error('Error sending message:', error);
         }
     };
+
+
     const handleReply = (senderUid, flat) => {
+
+        console.log('handleReply - flat este null:', flat);
+
         if (!senderUid) {
             console.error('senderUid is undefined');
             return;
         }
+
+        if (!flat) {
+            console.error('Flat data is undefined');
+            return;
+        }
+
         setRecipientUid(senderUid);
         setSelectedFlat(flat);
         setOpen(true);
     };
+
+
 
     const handleClose = () => {
         setOpen(false);
@@ -145,7 +159,7 @@ function Messages() {
                                 <IconButton onClick={() => handleDeleteMessage(message.id)}>
                                     <Delete />
                                 </IconButton>
-                                <IconButton onClick={() => handleReply(message.senderUid)}>
+                                <IconButton onClick={() => handleReply(message.senderUid, message.flat)}>
                                     <Reply />
                                 </IconButton>
                             </TableCell>

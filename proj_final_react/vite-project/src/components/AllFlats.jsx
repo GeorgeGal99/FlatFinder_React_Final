@@ -162,15 +162,20 @@ function AllFlats() {
                         {favoriteFlats.includes(params.row.id) ? <Favorite sx={{ color: 'red' }} /> : <FavoriteBorder />}
                     </IconButton>
 
-                    <IconButton
-                        onClick={() => {
-                            setRecipientUid(params.row.ownerUid); // se preia  UID-ul destinatarului
-                            setSelectedFlat(params.row);
-                            setOpen(true); // Deschide modalul de trimitere a mesajului
-                        }}
-                    >
-                        <Send />
-                    </IconButton>
+                    {/* se asigură că butonul Send este afișat doar dacă 
+                    utilizatorul curent nu este propietarul flatului  */}
+                    {params.row.ownerUid !== currentUser.uid && (
+                        <IconButton
+                            onClick={() => {
+                                setRecipientUid(params.row.ownerUid); // se preia  UID-ul destinatarului
+                                setSelectedFlat(params.row);
+                                setOpen(true); // Deschide modalul de trimitere a mesajului
+                            }}
+                        >
+                            <Send />
+                        </IconButton>
+                    )}
+
 
                     {isAdmin && (
                         <>
