@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Box, IconButton } from '@mui/material';
+import { Box, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { Delete } from '@mui/icons-material';
 import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../firebase';
 import Header from './Header';
 
-
-
 function AllUsers() {
     const [users, setUsers] = useState([]);
+    const [open, setOpen] = useState(false);
+    const [selectedUserId, setSelectedUserId] = useState(null);
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -29,26 +29,36 @@ function AllUsers() {
         fetchUsers();
     }, []);
 
-    const handleDeleteUser = async (userId) => {
+    const handleDeleteUser = async () => {
         try {
-            await deleteDoc(doc(db, 'users', userId));
-            setUsers(users.filter(user => user.id !== userId));
-            console.log('User deleted successfully');
+            if (selectedUserId) {
+                await deleteDoc(doc(db, 'users', selectedUserId));
+                setUsers(users.filter(user => user.id !== selectedUserId));
+                console.log('User deleted successfully');
+            }
+            setOpen(false);
         } catch (error) {
             console.error('Error deleting user:', error);
         }
     };
 
+    const handleOpenModal = (userId) => {
+        setSelectedUserId(userId);
+        setOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setOpen(false);
+    };
+
     const columns = [
-        // { field: 'displayName', headerName: 'Full Name', width: 200 },
         { field: 'email', headerName: 'Email', width: 550 },
-        // { field: 'role', headerName: 'Role', width: 150 }, // presupunând că ai un câmp de rol în Firebase
         {
             field: 'actions',
             headerName: 'Actions',
             width: 150,
             renderCell: (params) => (
-                <IconButton onClick={() => handleDeleteUser(params.row.id)}>
+                <IconButton onClick={() => handleOpenModal(params.row.id)}>
                     <Delete color="error" />
                 </IconButton>
             ),
@@ -68,12 +78,33 @@ function AllUsers() {
                     autoHeight
                     sortModel={[
                         {
-                            field: 'displayName',
+                            field: 'email',
                             sort: 'asc',
                         },
                     ]}
                 />
             </Box>
+
+            {/* Modal de confirmare ștergere */}
+            <Dialog
+                open={open}
+                onClose={handleCloseModal}
+            >
+                <DialogTitle>Confirm Delete</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Are you sure you want to delete this user? This action cannot be undone.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseModal} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={handleDeleteUser} color="error">
+                        Delete
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 }

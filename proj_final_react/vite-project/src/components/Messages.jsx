@@ -78,12 +78,13 @@ function Messages() {
                 console.lof('recipiend uid is undefined');
                 return;
             }
+            console.log(selectedFlat);
             await addDoc(collection(db, 'messages'), {
                 ownerEmail: currentUser.email,
                 senderUid: currentUser.uid,
                 recipientUid: recipientUid,
                 message: replyMessage,
-                flatId: selectedFlat.id,
+                // flatId: selectedFlat.id,
                 timestamp: new Date(),
                 flatList: {
                     city: selectedFlat.city || 'Unknown',
@@ -101,7 +102,7 @@ function Messages() {
 
 
     const handleReply = (senderUid, flat) => {
-
+        console.log(flat);
         console.log('handleReply - flat este null:', flat);
 
         if (!senderUid) {
@@ -110,6 +111,7 @@ function Messages() {
         }
 
         if (!flat) {
+
             console.error('Flat data is undefined');
             return;
         }
@@ -159,7 +161,7 @@ function Messages() {
                                 <IconButton onClick={() => handleDeleteMessage(message.id)}>
                                     <Delete />
                                 </IconButton>
-                                <IconButton onClick={() => handleReply(message.senderUid, message.flat)}>
+                                <IconButton onClick={() => handleReply(message.senderUid, message.flatsList)}>
                                     <Reply />
                                 </IconButton>
                             </TableCell>
