@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import {
+    Button, Dialog, DialogActions, DialogContent, DialogTitle,
+    IconButton, Table, TableBody, TableCell, TableHead, TableRow
+} from '@mui/material';
 import { Delete, Reply } from '@mui/icons-material';
 import { db } from '../firebase';
 import { collection, getDocs, deleteDoc, doc, query, where, addDoc, getDoc } from 'firebase/firestore';

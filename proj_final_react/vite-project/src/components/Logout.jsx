@@ -1,5 +1,3 @@
-
-
 import React, { useState } from 'react';
 import { Button, Modal } from '@mui/material';
 import { doSignOut } from '../auth';

@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
+import {
+    Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,
+    Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField
+} from '@mui/material';
 import { db } from '../firebase';
 import { collection, query, where, getDocs, doc, deleteDoc, updateDoc, setDoc, getDoc } from 'firebase/firestore';
 import { useAuth } from '../contexts/authContext';

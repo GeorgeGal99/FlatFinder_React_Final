@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { AuthProvider } from './contexts/authContext.jsx';
 import Login from './components/login.jsx';
-import Register from './components/register.jsx';
+import Register from './components/Register.jsx'
 import Logout from './components/Logout.jsx';
 import Home from './components/Home.jsx';
 import AllFlats from './components/AllFlats.jsx';
