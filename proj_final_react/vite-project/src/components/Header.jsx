@@ -8,30 +8,37 @@ function Header() {
     const { currentUser, userLoggedIn, isAdmin } = useAuth();
 
     return (
-        <AppBar position="static">
+        <AppBar position="static"
+
+            sx={{
+                backgroundColor: 'transparent', // Navbar transparent
+                boxShadow: 'none'
+            }}
+        >
+
             <Toolbar>
                 {userLoggedIn && (
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                    <Typography variant="h6" component="div" sx={{ flexGrow: 1, color: 'black' }}>
                         FlatFinder Welcome, {currentUser.email} {isAdmin && '(Admin)'}
                     </Typography>
                 )}
 
 
-                <Button color="inherit" component={Link} to="/">
+                <Button color="secondary" component={Link} to="/" sx={{ color: 'black' }}>
                     Home
                 </Button>
                 {userLoggedIn && (
                     <>
-                        <Button color="inherit" component={Link} to="/my-profiles">
+                        <Button color="primary" component={Link} to="/my-profiles" sx={{ color: 'black' }}>
                             My Profile
                         </Button>
 
-                        <Button color="inherit" component={Link} to="/messages">
+                        <Button color="primary" component={Link} to="/messages" sx={{ color: 'black' }}>
                             Messages
                         </Button>
 
                         {isAdmin && (
-                            <Button color="inherit" component={Link} to="/all-users">
+                            <Button color="primary" component={Link} to="/all-users" sx={{ color: 'black' }}>
                                 All Users
                             </Button>
                         )}

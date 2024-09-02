@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
     Box, TextField, IconButton, Dialog, DialogActions,
-    DialogContent, DialogTitle, Button, Checkbox
+    DialogContent, DialogTitle, Button, Checkbox, TableContainer, Paper
 } from '@mui/material';
 import { Favorite, FavoriteBorder, Send, Edit, Delete } from '@mui/icons-material';
 import { db } from '../firebase';
@@ -192,155 +192,159 @@ function AllFlats() {
 
     return (
         <Box>
-            <DataGrid
-                sx={{
-                    '.MuiDataGrid-menuIcon': {
-                        visibility: 'visible !important',
-                        width: "auto !important"
-                    },
+            <TableContainer component={Paper}>
+                <DataGrid
+                    sx={{
+                        '.MuiDataGrid-menuIcon': {
+                            visibility: 'visible !important',
+                            width: "auto !important",
 
-                }}
+                        },
 
-                rows={filteredFlats}
-                columns={columns}
-                pageSize={10}
-                rowsPerPageOptions={[10]}
-                disableSelectionOnClick
-                autoHeight
-            />
+                    }}
 
-            <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>Send a Message</DialogTitle>
-                <DialogContent>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        label="Message"
-                        type="text"
-                        fullWidth
-                        variant="outlined"
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose} color="primary">
-                        Cancel
-                    </Button>
-                    <Button onClick={handleSend} color="primary">
-                        Send
-                    </Button>
-                </DialogActions>
-            </Dialog>
 
-            {selectedFlat && (
-                <Dialog open={editOpen} onClose={handleEditClose}>
-                    <DialogTitle>Edit Flat</DialogTitle>
+                    rows={filteredFlats}
+                    columns={columns}
+                    pageSize={10}
+                    rowsPerPageOptions={[10]}
+                    disableSelectionOnClick
+                    autoHeight
+                />
+
+                <Dialog open={open} onClose={handleClose}>
+                    <DialogTitle>Send a Message</DialogTitle>
                     <DialogContent>
                         <TextField
                             autoFocus
                             margin="dense"
-                            label="City"
+                            label="Message"
                             type="text"
                             fullWidth
                             variant="outlined"
-                            value={selectedFlat.city}
-                            onChange={(e) => setSelectedFlat({ ...selectedFlat, city: e.target.value })}
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
                         />
-                        <TextField
-                            margin="dense"
-                            label="Street Name"
-                            type="text"
-                            fullWidth
-                            variant="outlined"
-                            value={selectedFlat.streetName}
-                            onChange={(e) => setSelectedFlat({ ...selectedFlat, streetName: e.target.value })}
-                        />
-                        <TextField
-                            margin="dense"
-                            label="Street Number"
-                            type="text"
-                            fullWidth
-                            variant="outlined"
-                            value={selectedFlat.streetNumber}
-                            onChange={(e) => setSelectedFlat({ ...selectedFlat, streetNumber: e.target.value })}
-                        />
-                        <TextField
-                            margin="dense"
-                            label="Area Size"
-                            type="number"
-                            fullWidth
-                            variant="outlined"
-                            value={selectedFlat.areaSize}
-                            onChange={(e) => setSelectedFlat({ ...selectedFlat, areaSize: e.target.value })}
-                        />
-                        <TextField
-                            margin="dense"
-                            label="Rent Price"
-                            type="number"
-                            fullWidth
-                            variant="outlined"
-                            value={selectedFlat.rentPrice}
-                            onChange={(e) => setSelectedFlat({ ...selectedFlat, rentPrice: e.target.value })}
-                        />
-                        <TextField
-                            margin="dense"
-                            label="Date Available"
-                            type="date"
-                            fullWidth
-                            variant="outlined"
-                            value={selectedFlat.dateAvailable}
-                            onChange={(e) => setSelectedFlat({ ...selectedFlat, dateAvailable: e.target.value })}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                        />
-                        <div style={{ display: 'flex', alignItems: 'center', marginTop: '16px' }}>
-                            <Checkbox
-                                checked={selectedFlat.ac}
-                                onChange={(e) => setSelectedFlat({ ...selectedFlat, ac: e.target.checked })}
-                                color="primary"
-                            />
-                            <label>Has AC</label>
-                        </div>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleEditClose} color="primary">
+                        <Button onClick={handleClose} color="primary">
                             Cancel
                         </Button>
-                        <Button
-                            onClick={handleUpdateFlat}
-                            sx={{
-                                backgroundColor: 'green',
-                                color: 'white',
-                                width: '100px',
-                                height: '30px',
-                                marginTop: 1
-                            }}
-                        >
-                            Save
+                        <Button onClick={handleSend} color="primary">
+                            Send
                         </Button>
                     </DialogActions>
                 </Dialog>
-            )}
 
-            <Dialog
-                open={confirmDeleteOpen}
-                onClose={handleCloseConfirmDelete}
-            >
-                <DialogTitle>Confirm Delete</DialogTitle>
-                <DialogContent>
-                    <p>Are you sure you want to delete this flat? This action cannot be undone.</p>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseConfirmDelete} color="primary">
-                        Cancel
-                    </Button>
-                    <Button onClick={handleDeleteFlat} color="secondary">
-                        Confirm
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                {selectedFlat && (
+                    <Dialog open={editOpen} onClose={handleEditClose}>
+                        <DialogTitle>Edit Flat</DialogTitle>
+                        <DialogContent>
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                label="City"
+                                type="text"
+                                fullWidth
+                                variant=""
+                                value={selectedFlat.city}
+                                onChange={(e) => setSelectedFlat({ ...selectedFlat, city: e.target.value })}
+                            />
+                            <TextField
+                                margin="dense"
+                                label="Street Name"
+                                type="text"
+                                fullWidth
+                                variant="outlined"
+                                value={selectedFlat.streetName}
+                                onChange={(e) => setSelectedFlat({ ...selectedFlat, streetName: e.target.value })}
+                            />
+                            <TextField
+                                margin="dense"
+                                label="Street Number"
+                                type="text"
+                                fullWidth
+                                variant="outlined"
+                                value={selectedFlat.streetNumber}
+                                onChange={(e) => setSelectedFlat({ ...selectedFlat, streetNumber: e.target.value })}
+                            />
+                            <TextField
+                                margin="dense"
+                                label="Area Size"
+                                type="number"
+                                fullWidth
+                                variant="outlined"
+                                value={selectedFlat.areaSize}
+                                onChange={(e) => setSelectedFlat({ ...selectedFlat, areaSize: e.target.value })}
+                            />
+                            <TextField
+                                margin="dense"
+                                label="Rent Price"
+                                type="number"
+                                fullWidth
+                                variant="outlined"
+                                value={selectedFlat.rentPrice}
+                                onChange={(e) => setSelectedFlat({ ...selectedFlat, rentPrice: e.target.value })}
+                            />
+                            <TextField
+                                margin="dense"
+                                label="Date Available"
+                                type="date"
+                                fullWidth
+                                variant="outlined"
+                                value={selectedFlat.dateAvailable}
+                                onChange={(e) => setSelectedFlat({ ...selectedFlat, dateAvailable: e.target.value })}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                            />
+                            <div style={{ display: 'flex', alignItems: 'center', marginTop: '16px' }}>
+                                <Checkbox
+                                    checked={selectedFlat.ac}
+                                    onChange={(e) => setSelectedFlat({ ...selectedFlat, ac: e.target.checked })}
+                                    color="primary"
+                                />
+                                <label>Has AC</label>
+                            </div>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={handleEditClose} color="primary">
+                                Cancel
+                            </Button>
+                            <Button
+                                onClick={handleUpdateFlat}
+                                sx={{
+                                    backgroundColor: 'green',
+                                    color: 'white',
+                                    width: '100px',
+                                    height: '30px',
+                                    marginTop: 1
+                                }}
+                            >
+                                Save
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                )}
+
+                <Dialog
+                    open={confirmDeleteOpen}
+                    onClose={handleCloseConfirmDelete}
+                >
+                    <DialogTitle>Confirm Delete</DialogTitle>
+                    <DialogContent>
+                        <p>Are you sure you want to delete this flat? This action cannot be undone.</p>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleCloseConfirmDelete} color="primary">
+                            Cancel
+                        </Button>
+                        <Button onClick={handleDeleteFlat} color="secondary">
+                            Confirm
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </TableContainer>
         </Box>
     );
 }

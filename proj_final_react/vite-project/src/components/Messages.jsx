@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import {
     Button, Dialog, DialogActions, DialogContent, DialogTitle,
-    IconButton, Table, TableBody, TableCell, TableHead, TableRow
+    IconButton, Table, TableBody, TableCell, TableHead, TableRow, Paper, TableContainer
 } from '@mui/material';
 import { Delete, Reply } from '@mui/icons-material';
 import { db } from '../firebase';
 import { collection, getDocs, deleteDoc, doc, query, where, addDoc, getDoc } from 'firebase/firestore';
 import { useAuth } from '../contexts/authContext';
 import Header from './Header';
+import backgroundImage from '../assets/tokyo.jpg';
+
 
 function Messages() {
     const { currentUser } = useAuth();
@@ -135,42 +137,61 @@ function Messages() {
 
     return (
         <div>
+
+            <img
+                src={backgroundImage}
+                alt="background"
+                style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    // filter: 'blur(0px)', // Efectul de blur
+                    zIndex: -1, // Asigură că imaginea este în spate
+                    opacity: 0.95, // Aplica un nivel de transparență
+                }}
+            />
             <Header />
             <h1>Messages</h1>
             <Table>
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Email Address</TableCell>
-                        <TableCell>Apartment (City, Street, Number)</TableCell>
-                        <TableCell>Timestamp</TableCell>
-                        <TableCell>Message Content</TableCell>
-                        <TableCell>Actions</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {messages.map((message) => (
-                        <TableRow key={message.id}>
-                            <TableCell>{message.ownerEmail}</TableCell>
-                            <TableCell>
-                                {message.flatsList ? (
-                                    `${message.flatsList.city}, ${message.flatsList.streetName}, ${message.flatsList.streetNumber}`
-                                ) : (
-                                    'N/A'
-                                )}
-                            </TableCell>
-                            <TableCell>{new Date(message.timestamp.toDate()).toLocaleString()}</TableCell>
-                            <TableCell>{message.message}</TableCell>
-                            <TableCell>
-                                <IconButton onClick={() => handleDeleteMessage(message.id)}>
-                                    <Delete />
-                                </IconButton>
-                                <IconButton onClick={() => handleReply(message.senderUid, message.flatsList)}>
-                                    <Reply />
-                                </IconButton>
-                            </TableCell>
+                <TableContainer component={Paper}>
+                    <TableHead>
+
+                        <TableRow>
+                            <TableCell>Email Address</TableCell>
+                            <TableCell>Apartment (City, Street, Number)</TableCell>
+                            <TableCell>Timestamp</TableCell>
+                            <TableCell>Message Content</TableCell>
+                            <TableCell>Actions</TableCell>
                         </TableRow>
-                    ))}
-                </TableBody>
+                    </TableHead>
+                    <TableBody>
+
+                        {messages.map((message) => (
+                            <TableRow key={message.id}>
+                                <TableCell>{message.ownerEmail}</TableCell>
+                                <TableCell>
+                                    {message.flatsList ? (
+                                        `${message.flatsList.city}, ${message.flatsList.streetName}, ${message.flatsList.streetNumber}`
+                                    ) : (
+                                        'N/A'
+                                    )}
+                                </TableCell>
+                                <TableCell>{new Date(message.timestamp.toDate()).toLocaleString()}</TableCell>
+                                <TableCell>{message.message}</TableCell>
+                                <TableCell>
+                                    <IconButton onClick={() => handleDeleteMessage(message.id)}>
+                                        <Delete />
+                                    </IconButton>
+                                    <IconButton onClick={() => handleReply(message.senderUid, message.flatsList)}>
+                                        <Reply />
+                                    </IconButton>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </TableContainer>
             </Table>
 
             <Dialog open={open} onClose={handleClose}>
@@ -193,6 +214,7 @@ function Messages() {
                     </Button>
                 </DialogActions>
             </Dialog>
+
         </div>
     );
 }

@@ -124,9 +124,11 @@ function MyFlats() {
 
     return (
         <div>
+
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
+
                         <TableRow>
                             <TableCell>City</TableCell>
                             <TableCell>Street Name</TableCell>

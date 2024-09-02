@@ -19,6 +19,8 @@ import { useAuth } from '../contexts/authContext';
 import { doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { updatePassword as firebaseUpdatePassword } from 'firebase/auth';
 import { db } from '../firebase';
+import backgroundImage from '../assets/tokyo.jpg';
+
 
 const MyProfiles = () => {
     const { currentUser } = useAuth();
@@ -142,6 +144,20 @@ const MyProfiles = () => {
 
     return (
         <Box>
+            <img
+                src={backgroundImage}
+                alt="background"
+                style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    // filter: 'blur(0px)', // Efectul de blur
+                    zIndex: -1, // Asigură că imaginea este în spate
+                    opacity: 0.95, // Aplica un nivel de transparență
+                }}
+            />
             <Header />
             <Grid container justifyContent="center" alignItems="center" style={{ minHeight: '80vh' }}>
                 <Grid item xs={12} sm={8} md={6}>

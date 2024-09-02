@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import {
     Box, IconButton, Dialog, DialogActions, DialogContent,
-    DialogContentText, DialogTitle, Button
+    DialogContentText, DialogTitle, Button, Paper, TableContainer, Toolbar
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { Delete } from '@mui/icons-material';
 import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../firebase';
 import Header from './Header';
+import backgroundImage from '../assets/tokyo.jpg';
+import { Link } from "react-router-dom";
+
+
 
 function AllUsers() {
     const [users, setUsers] = useState([]);
     const [open, setOpen] = useState(false);
     const [selectedUserId, setSelectedUserId] = useState(null);
-
+    const [activeButton, setActiveButton] = useState(location.pathname);
     useEffect(() => {
         const fetchUsers = async () => {
             try {
@@ -67,25 +71,94 @@ function AllUsers() {
             ),
         },
     ];
+    const buttonStyle = (path) => ({
+        backgroundColor: activeButton === path ? '#1976d2' : 'transparent', // Fundalul butonului activ
+        color: activeButton === path ? '#ffffff' : '#000000', // Textul butonului activ (alb) sau negru
+        border: '1px solid #1976d2', // Conturul butonului
+        '&:hover': {
+            backgroundColor: activeButton === path ? '#1565c0' : 'rgba(0, 0, 0, 0.1)', // Fundal la hover
+            color: activeButton === path ? '#ffffff' : '#000000', // Textul la hover
+        }
+    });
 
     return (
         <div>
+            <img
+                src={backgroundImage}
+                alt="background"
+                style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    // filter: 'blur(0px)', // Efectul de blur
+                    zIndex: -1, // Asigură că imaginea este în spate
+                    opacity: 0.95, // Aplica un nivel de transparență
+                }}
+            />
+
             <Header />
-            <Box sx={{ height: 400, width: '100%', marginTop: 2 }}>
-                <DataGrid
-                    rows={users}
-                    columns={columns}
-                    pageSize={10}
-                    rowsPerPageOptions={[10]}
-                    disableSelectionOnClick
-                    autoHeight
-                    sortModel={[
-                        {
-                            field: 'email',
-                            sort: 'asc',
-                        },
-                    ]}
-                />
+            <Toolbar>
+                < Button
+                    color="inherit"
+                    component={Link}
+                    to="/all-flats"
+                    sx={buttonStyle('/all-flats')}
+                    onClick={() => setActiveButton('/all-flats')}
+                >
+                    All Flats
+                </Button>
+                <Button
+                    color="inherit"
+                    component={Link}
+                    to="/my-flats"
+                    sx={buttonStyle('/my-flats')}
+                    onClick={() => setActiveButton('/my-flats')}
+                >
+                    My Flats
+                </Button>
+                <Button
+                    color="inherit"
+                    component={Link}
+                    to="/favorite-flats"
+                    sx={buttonStyle('/favorite-flats')}
+                    onClick={() => setActiveButton('/favorite-flats')}
+                >
+                    Favorite Flats
+                </Button>
+                <Button
+                    color="inherit"
+                    component={Link}
+                    to="/add-flat"
+                    sx={buttonStyle('/add-flat')}
+                    onClick={() => setActiveButton('/add-flat')}
+                >
+                    Add Flat
+                </Button>
+            </Toolbar>
+            <Box sx={{ height: 400, width: '100%', marginTop: 2, }}>
+                <TableContainer component={Paper}>
+                    <DataGrid
+                        rows={users}
+                        columns={columns}
+                        pageSize={10}
+                        rowsPerPageOptions={[10]}
+                        disableSelectionOnClick
+                        autoHeight
+                        sortModel={[
+                            {
+                                field: 'email',
+                                sort: 'asc',
+                            },
+                        ]}
+                        sx={{
+                            backgroundColor: 'rgba(255, 255, 255, 0.4)', // Fundal semi-transparent (alb cu 70% opacitate)
+
+
+                        }}
+                    />
+                </TableContainer>
             </Box>
 
             {/* Modal de confirmare ștergere */}
