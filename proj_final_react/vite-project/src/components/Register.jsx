@@ -112,7 +112,7 @@ function Register() {
         }
     }, [currentUser, navigate]);
 
-    //HTML and JS
+
     return (
 
         <Box sx={{ maxWidth: 300, margin: 'auto', border: '2px solid black', padding: 3 }}>

@@ -155,18 +155,25 @@ function Messages() {
             <Header />
             <h1>Messages</h1>
             <Table>
-                <TableContainer component={Paper}>
-                    <TableHead>
+                <TableContainer >
+                    <TableHead
+                        sx={{
+                            backgroundColor: 'rgba(255, 255, 255, 1)', // Fundal semi-transparent (alb cu 70% opacitate)
+                        }}>
 
                         <TableRow>
-                            <TableCell>Email Address</TableCell>
-                            <TableCell>Apartment (City, Street, Number)</TableCell>
-                            <TableCell>Timestamp</TableCell>
-                            <TableCell>Message Content</TableCell>
-                            <TableCell>Actions</TableCell>
+                            <TableCell sx={{ width: '25%' }}>Email Address</TableCell>
+                            <TableCell sx={{ width: '25%' }}>Apartment (City, Street, Number)</TableCell>
+                            <TableCell sx={{ width: '20%' }}>Timestamp</TableCell>
+                            <TableCell sx={{ width: '30%' }}>Message Content</TableCell>
+                            <TableCell sx={{ width: '10%' }}>Actions</TableCell>
                         </TableRow>
+
                     </TableHead>
-                    <TableBody>
+                    <TableBody
+                        sx={{
+                            backgroundColor: 'rgba(255, 255, 255, 0.4)', // Fundal semi-transparent 
+                        }}>
 
                         {messages.map((message) => (
                             <TableRow key={message.id}>

@@ -161,9 +161,17 @@ const MyProfiles = () => {
             <Header />
             <Grid container justifyContent="center" alignItems="center" style={{ minHeight: '80vh' }}>
                 <Grid item xs={12} sm={8} md={6}>
-                    <Card>
-                        <CardContent>
-                            <Typography variant="h5" align="center" gutterBottom>
+                    <Card
+                        sx={{
+
+                            backgroundColor: 'rgba(222, 235, 250,0.5)',
+                        }}>
+                        <CardContent
+                        >
+                            <Typography variant="h5" align="center" gutterBottom
+                                sx={{
+                                    backgroundColor: 'rgba(255, 255, 255, 1)',
+                                }}>
                                 Profil
                             </Typography>
                             <Grid container spacing={2}>

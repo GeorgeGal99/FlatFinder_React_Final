@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Button, Modal } from '@mui/material';
 import { doSignOut } from '../auth';
 import { useNavigate } from 'react-router-dom';
+import LogoutIcon from "@mui/icons-material/Logout";
+
 
 const Logout = () => {
     const [open, setOpen] = useState(false);
@@ -27,6 +29,7 @@ const Logout = () => {
                     color: 'black',
                 }}
                 onClick={handleOpen}
+                startIcon={<LogoutIcon />}
             >
                 Logout
             </Button>
@@ -56,7 +59,7 @@ const Logout = () => {
                             color: 'white'  // Text alb pentru contrast
                         }}
                     >
-                        Da
+                        Yes
                     </Button>
                     <Button
                         onClick={handleClose}
@@ -65,7 +68,7 @@ const Logout = () => {
                             color: 'white'  // Text alb pentru contrast
                         }}
                     >
-                        Nu
+                        No
                     </Button>
                 </div>
             </Modal>

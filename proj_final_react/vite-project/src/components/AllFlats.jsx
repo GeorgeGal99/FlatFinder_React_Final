@@ -145,18 +145,18 @@ function AllFlats() {
     };
 
     const columns = [
-        { field: 'city', headerName: 'City', width: 200 },
-        { field: 'streetName', headerName: 'Street Name', width: 200 },
-        { field: 'streetNumber', headerName: 'Street Number', width: 150 },
-        { field: 'areaSize', headerName: 'Area Size', width: 150 },
-        { field: 'ac', headerName: 'AC', width: 100 },
+        { field: 'city', headerName: 'City', width: 190 },
+        { field: 'streetName', headerName: 'Street Name', width: 190 },
+        { field: 'streetNumber', headerName: 'Street Number', width: 135 },
+        { field: 'areaSize', headerName: 'Area Size', width: 130 },
+        { field: 'ac', headerName: 'AC', width: 90 },
         { field: 'yearBuilt', headerName: 'Year Built', width: 150 },
-        { field: 'rentPrice', headerName: 'Rent Price $', width: 150 },
-        { field: 'dateAvailable', headerName: 'Date Available', width: 300 },
+        { field: 'rentPrice', headerName: 'Rent Price $', width: 120 },
+        { field: 'dateAvailable', headerName: 'Date Available', width: 150 },
         {
             field: 'actions',
             headerName: 'Actions',
-            width: 200,
+            width: 150,
             renderCell: (params) => (
                 <>
                     <IconButton onClick={() => handleFavorite(params.row.id)}>
@@ -192,7 +192,7 @@ function AllFlats() {
 
     return (
         <Box>
-            <TableContainer component={Paper}>
+            <TableContainer >
                 <DataGrid
                     sx={{
                         '.MuiDataGrid-menuIcon': {
@@ -200,7 +200,7 @@ function AllFlats() {
                             width: "auto !important",
 
                         },
-
+                        backgroundColor: 'rgba(255, 255, 255, 0.3)',
                     }}
 
 
@@ -246,7 +246,7 @@ function AllFlats() {
                                 label="City"
                                 type="text"
                                 fullWidth
-                                variant=""
+                                variant="outlined"
                                 value={selectedFlat.city}
                                 onChange={(e) => setSelectedFlat({ ...selectedFlat, city: e.target.value })}
                             />
@@ -300,7 +300,7 @@ function AllFlats() {
                             />
                             <div style={{ display: 'flex', alignItems: 'center', marginTop: '16px' }}>
                                 <Checkbox
-                                    checked={selectedFlat.ac}
+                                    checked={selectedFlat.ac == 'yes'}
                                     onChange={(e) => setSelectedFlat({ ...selectedFlat, ac: e.target.checked })}
                                     color="primary"
                                 />

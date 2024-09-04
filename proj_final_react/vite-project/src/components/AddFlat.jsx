@@ -96,7 +96,11 @@ function AddFlat() {
 
     return (
         <Container sx={{ maxWidth: '100%', padding: 0, display: 'flex', justifyContent: 'center', alignItems: 'start', minHeight: '100vh' }}>
-            <TableContainer component={Paper} sx={{ width: '450px', padding: 1 }}>
+            <TableContainer sx={{
+                width: '450px', padding: 1,
+                backgroundColor: 'rgba( 222, 235, 250, 0.8)', // Fundal semi-transparent 
+
+            }}>
                 <Table sx={{ minWidth: 300 }}>
                     <TableBody>
                         <TableRow sx={{ height: '40px' }}>

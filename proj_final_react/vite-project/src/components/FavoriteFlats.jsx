@@ -64,9 +64,12 @@ function FavoriteFlats() {
 
     return (
         <>
-            <TableContainer component={Paper}>
+            <TableContainer >
                 <Table>
-                    <TableHead>
+                    <TableHead
+                        sx={{
+                            backgroundColor: 'rgba( 222, 235, 250, 0.6)', // Fundal semi-transparent 
+                        }}>
                         <TableRow>
                             <TableCell>City</TableCell>
                             <TableCell>Street Name</TableCell>
@@ -79,7 +82,11 @@ function FavoriteFlats() {
                             <TableCell>Actions</TableCell>
                         </TableRow>
                     </TableHead>
-                    <TableBody>
+                    <TableBody
+                        sx={{
+                            backgroundColor: 'rgba(255, 255, 255, 0.5)', // Fundal alb semi-transparent
+                            boxShadow: 'none', // Opțional: elimină shadow-ul implicit al Paper
+                        }}>
                         {favoriteFlats.map(flat => (
                             <TableRow key={flat.id}>
                                 <TableCell>{flat.city}</TableCell>

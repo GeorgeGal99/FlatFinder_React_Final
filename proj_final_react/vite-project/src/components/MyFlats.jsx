@@ -125,9 +125,13 @@ function MyFlats() {
     return (
         <div>
 
-            <TableContainer component={Paper}>
+            <TableContainer>
                 <Table>
-                    <TableHead>
+                    <TableHead
+                        sx={{
+                            backgroundColor: 'rgba( 222, 235, 250, 0.7)', // Fundal semi-transparent 
+
+                        }}>
 
                         <TableRow>
                             <TableCell>City</TableCell>
@@ -141,7 +145,10 @@ function MyFlats() {
                             <TableCell>Actions</TableCell>
                         </TableRow>
                     </TableHead>
-                    <TableBody>
+                    <TableBody
+                        sx={{
+                            backgroundColor: 'rgba(255, 255, 255, 0.5)', // Fundal alb semi-transparent
+                        }}>
                         {flats.map(flat => (
                             <TableRow key={flat.id}>
                                 <TableCell>{flat.city}</TableCell>

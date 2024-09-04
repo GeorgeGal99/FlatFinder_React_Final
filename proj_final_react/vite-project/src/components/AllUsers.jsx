@@ -104,7 +104,12 @@ function AllUsers() {
                     color="inherit"
                     component={Link}
                     to="/all-flats"
-                    sx={buttonStyle('/all-flats')}
+                    sx={{
+                        ...buttonStyle('/all-flats'),
+                        border: 'none', // Elimină border-ul
+                        padding: 0,     // Opțional: elimină padding-ul pentru a face butonul să fie doar text
+                        textTransform: 'none', // Opțional: menține textul în forma originală (fără uppercase)
+                    }}
                     onClick={() => setActiveButton('/all-flats')}
                 >
                     All Flats
@@ -113,7 +118,13 @@ function AllUsers() {
                     color="inherit"
                     component={Link}
                     to="/my-flats"
-                    sx={buttonStyle('/my-flats')}
+                    sx={{
+                        ...buttonStyle('/my-flats'),
+                        border: 'none',
+                        padding: 0,
+                        textTransform: 'none',
+
+                    }}
                     onClick={() => setActiveButton('/my-flats')}
                 >
                     My Flats
@@ -122,7 +133,12 @@ function AllUsers() {
                     color="inherit"
                     component={Link}
                     to="/favorite-flats"
-                    sx={buttonStyle('/favorite-flats')}
+                    sx={{
+                        ...buttonStyle('/favorite-flats'),
+                        border: 'none',
+                        padding: 0,
+                        textTransform: 'none',
+                    }}
                     onClick={() => setActiveButton('/favorite-flats')}
                 >
                     Favorite Flats
@@ -131,32 +147,39 @@ function AllUsers() {
                     color="inherit"
                     component={Link}
                     to="/add-flat"
-                    sx={buttonStyle('/add-flat')}
+                    sx={{
+                        ...buttonStyle('/add-flat'),
+                        border: 'none',
+                        border: 0,
+                        textTransform: 'none',
+
+                    }}
                     onClick={() => setActiveButton('/add-flat')}
                 >
                     Add Flat
                 </Button>
             </Toolbar>
             <Box sx={{ height: 400, width: '100%', marginTop: 2, }}>
-                <TableContainer component={Paper}>
+                <TableContainer >
+
                     <DataGrid
+
                         rows={users}
                         columns={columns}
                         pageSize={10}
                         rowsPerPageOptions={[10]}
                         disableSelectionOnClick
                         autoHeight
+                        sx={{
+                            backgroundColor: 'rgba(255, 255, 255, 0.5)', // Fundal semi-transparent (alb cu 70% opacitate)
+                        }}
                         sortModel={[
                             {
                                 field: 'email',
                                 sort: 'asc',
                             },
                         ]}
-                        sx={{
-                            backgroundColor: 'rgba(255, 255, 255, 0.4)', // Fundal semi-transparent (alb cu 70% opacitate)
 
-
-                        }}
                     />
                 </TableContainer>
             </Box>

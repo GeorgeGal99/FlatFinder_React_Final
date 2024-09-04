@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/authContext';
 import { Button, Typography, AppBar, Toolbar } from '@mui/material';
 import Logout from './Logout';
+import HomeIcon from "@mui/icons-material/Home";
 
 function Header() {
     const { currentUser, userLoggedIn, isAdmin } = useAuth();
@@ -18,9 +19,13 @@ function Header() {
 
             <Toolbar>
                 {userLoggedIn && (
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1, color: 'black' }}>
-                        FlatFinder Welcome, {currentUser.email} {isAdmin && '(Admin)'}
+
+                    <Typography variant="h6" component="div" sx={{ flexGrow: 1, color: 'black', display: 'flex', alignItems: 'center' }}>
+                        FlatFinder Welcome
+                        <HomeIcon sx={{ marginLeft: 1 }} /> {/* Add the Home icon with some left margin */}
+                        , {currentUser.email} {isAdmin && '(Admin)'}
                     </Typography>
+
                 )}
 
 
