@@ -156,7 +156,7 @@ function AllFlats() {
         {
             field: 'actions',
             headerName: 'Actions',
-            width: 150,
+            width: 200,
             renderCell: (params) => (
                 <>
                     <IconButton onClick={() => handleFavorite(params.row.id)}>
@@ -200,7 +200,7 @@ function AllFlats() {
                             width: "auto !important",
 
                         },
-                        backgroundColor: 'rgba(255, 255, 255, 0.3)',
+                        backgroundColor: 'rgba(255, 255, 255, 0.5)',
                     }}
 
 

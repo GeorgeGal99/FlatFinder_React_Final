@@ -14,6 +14,7 @@ import Messages from './components/Messages.jsx';
 import MyProfiles from './components/MyProfiles.jsx';
 import UsersProfiles from './components/UsersProfiles.jsx'
 import AllUsers from './components/AllUsers.jsx';
+import "./index.css"
 
 
 const router = createBrowserRouter([

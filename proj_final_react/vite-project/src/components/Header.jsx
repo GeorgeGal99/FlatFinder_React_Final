@@ -23,7 +23,7 @@ function Header() {
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1, color: 'black', display: 'flex', alignItems: 'center' }}>
                         FlatFinder Welcome
                         <HomeIcon sx={{ marginLeft: 1 }} /> {/* Add the Home icon with some left margin */}
-                        , {currentUser.email} {isAdmin && '(Admin)'}
+                        , {currentUser.email}  {isAdmin && <span style={{ color: 'red' }}>(Admin)</span>}
                     </Typography>
 
                 )}

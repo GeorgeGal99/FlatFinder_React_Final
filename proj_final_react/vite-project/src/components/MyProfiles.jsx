@@ -19,7 +19,7 @@ import { useAuth } from '../contexts/authContext';
 import { doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { updatePassword as firebaseUpdatePassword } from 'firebase/auth';
 import { db } from '../firebase';
-import backgroundImage from '../assets/tokyo.jpg';
+import backgroundImage from '../assets/ny1.jpg';
 
 
 const MyProfiles = () => {
@@ -153,9 +153,8 @@ const MyProfiles = () => {
                     left: 0,
                     width: '100%',
                     height: '100%',
-                    // filter: 'blur(0px)', // Efectul de blur
-                    zIndex: -1, // Asigură că imaginea este în spate
-                    opacity: 0.95, // Aplica un nivel de transparență
+                    zIndex: -1, //  se asigură că imaginea este în spate
+                    opacity: 0.95, //  se aplica un nivel de transparență
                 }}
             />
             <Header />
@@ -194,7 +193,7 @@ const MyProfiles = () => {
                                 </Grid>
                                 {isAdmin && (
                                     <Grid item xs={12} sm={6}>
-                                        <IconButton color="secondary" onClick={handleOpenDeleteConfirm}>
+                                        <IconButton color="error" onClick={handleOpenDeleteConfirm}>
                                             <DeleteIcon />
                                         </IconButton>
                                     </Grid>

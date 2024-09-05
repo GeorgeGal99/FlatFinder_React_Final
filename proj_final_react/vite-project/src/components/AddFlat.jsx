@@ -95,17 +95,19 @@ function AddFlat() {
     };
 
     return (
-        <Container sx={{ maxWidth: '100%', padding: 0, display: 'flex', justifyContent: 'center', alignItems: 'start', minHeight: '100vh' }}>
+        <Container sx={{ maxWidth: '100%', padding: 0, display: 'flex', justifyContent: 'center', alignItems: 'start', minHeight: 'autoHeight' }}>
             <TableContainer sx={{
-                width: '450px', padding: 1,
-                backgroundColor: 'rgba( 222, 235, 250, 0.8)', // Fundal semi-transparent 
+                width: '650px', padding: 1,
+
+                backgroundColor: 'rgba( 222, 235, 250, 0.6)', // Fundal semi-transparent 
 
             }}>
-                <Table sx={{ minWidth: 300 }}>
+                <Table sx={{ minWidth: 300, }}>
                     <TableBody>
                         <TableRow sx={{ height: '40px' }}>
                             <TableCell sx={{ padding: '10px 8px' }}>
                                 <TextField
+                                    size='small'
                                     name="city"
                                     label="City"
                                     onChange={handleChange}
@@ -115,11 +117,24 @@ function AddFlat() {
                                     helperText={isSubmitted && errors.city}
                                 />
                             </TableCell>
+                            <TableCell sx={{ padding: '10px 8px' }}>
+                                <TextField
+                                    size='small'
+                                    name="yearBuilt"
+                                    label="Year Built"
+                                    onChange={handleChange}
+                                    sx={{ width: '100%', margin: 0 }}
+                                    InputProps={{ sx: { height: '40px' } }}
+                                    error={isSubmitted && !!errors.yearBuilt}
+                                    helperText={isSubmitted && errors.yearBuilt}
+                                />
+                            </TableCell>
                         </TableRow>
 
                         <TableRow sx={{ height: '40px' }}>
                             <TableCell sx={{ padding: '10px 8px' }}>
                                 <TextField
+                                    size='small'
                                     name="streetName"
                                     label="Street Name"
                                     onChange={handleChange}
@@ -129,10 +144,9 @@ function AddFlat() {
                                     helperText={isSubmitted && errors.streetName}
                                 />
                             </TableCell>
-                        </TableRow>
-                        <TableRow sx={{ height: '40px' }}>
                             <TableCell sx={{ padding: '10px 8px' }}>
                                 <TextField
+                                    size='small'
                                     name="streetNumber"
                                     label="Street Number"
                                     onChange={handleChange}
@@ -143,9 +157,13 @@ function AddFlat() {
                                 />
                             </TableCell>
                         </TableRow>
+                        {/* <TableRow sx={{ height: '40px' }}>
+                           
+                        </TableRow> */}
                         <TableRow sx={{ height: '40px' }}>
                             <TableCell sx={{ padding: '10px 8px' }}>
                                 <TextField
+                                    size='small'
                                     name="areaSize"
                                     label="Area Size"
                                     onChange={handleChange}
@@ -171,22 +189,13 @@ function AddFlat() {
                                 {isSubmitted && errors.ac && <div style={{ color: 'red', fontSize: '12px' }}>{errors.ac}</div>}
                             </TableCell>
                         </TableRow>
+                        {/* <TableRow sx={{ height: '40px' }}>
+                            
+                        </TableRow> */}
                         <TableRow sx={{ height: '40px' }}>
                             <TableCell sx={{ padding: '10px 8px' }}>
                                 <TextField
-                                    name="yearBuilt"
-                                    label="Year Built"
-                                    onChange={handleChange}
-                                    sx={{ width: '100%', margin: 0 }}
-                                    InputProps={{ sx: { height: '40px' } }}
-                                    error={isSubmitted && !!errors.yearBuilt}
-                                    helperText={isSubmitted && errors.yearBuilt}
-                                />
-                            </TableCell>
-                        </TableRow>
-                        <TableRow sx={{ height: '40px' }}>
-                            <TableCell sx={{ padding: '10px 8px' }}>
-                                <TextField
+                                    size='small'
                                     name="rentPrice"
                                     label="Rent Price"
                                     onChange={handleChange}
@@ -240,3 +249,40 @@ function AddFlat() {
 }
 
 export default AddFlat;
+
+
+
+// import * as React from 'react';
+// import Paper from '@mui/material/Paper';
+// import Stack from '@mui/material/Stack';
+// import Box from '@mui/material/Box';
+// import { styled } from '@mui/material/styles';
+
+// const Item = styled(Paper)(({ theme }) => ({
+//   backgroundColor: '#fff',
+//   ...theme.typography.body2,
+//   padding: theme.spacing(1),
+//   textAlign: 'center',
+//   color: theme.palette.text.secondary,
+//   flexGrow: 1,
+//   ...theme.applyStyles('dark', {
+//     backgroundColor: '#1A2027',
+//   }),
+// }));
+
+// export default function FlexboxGapStack() {
+//   return (
+//     <Box sx={{ width: 200 }}>
+//       <Stack
+//         spacing={{ xs: 1, sm: 2 }}
+//         direction="row"
+//         useFlexGap
+//         sx={{ flexWrap: 'wrap' }}
+//       >
+//         <Item>Item 1</Item>
+//         <Item>Item 2</Item>
+//         <Item>Long content</Item>
+//       </Stack>
+//     </Box>
+//   );
+// }

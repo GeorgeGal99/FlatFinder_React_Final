@@ -8,7 +8,7 @@ import { db } from '../firebase';
 import { collection, getDocs, deleteDoc, doc, query, where, addDoc, getDoc } from 'firebase/firestore';
 import { useAuth } from '../contexts/authContext';
 import Header from './Header';
-import backgroundImage from '../assets/tokyo.jpg';
+import backgroundImage from '../assets/ny1.jpg';
 
 
 function Messages() {

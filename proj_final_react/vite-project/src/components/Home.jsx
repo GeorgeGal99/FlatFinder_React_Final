@@ -6,7 +6,7 @@ import Header from "./Header";
 import { db } from "../firebase";
 import { collection, getDocs, doc, getDoc } from "firebase/firestore";
 import AllFlats from "./AllFlats";
-import backgroundImage from '../assets/tokyo.jpg';
+import backgroundImage from '../assets/ny1.jpg';
 
 
 

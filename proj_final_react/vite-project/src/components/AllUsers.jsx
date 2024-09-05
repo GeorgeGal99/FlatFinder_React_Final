@@ -8,7 +8,7 @@ import { Delete } from '@mui/icons-material';
 import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../firebase';
 import Header from './Header';
-import backgroundImage from '../assets/tokyo.jpg';
+import backgroundImage from '../assets/ny1.jpg';
 import { Link } from "react-router-dom";
 
 
