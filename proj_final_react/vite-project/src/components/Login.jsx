@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { TextField, Button, Box, Typography } from '@mui/material';
 import { useNavigate, Link } from 'react-router-dom';
 import { doSignInWithEmailAndPassword } from '../auth';
+import backgroundImage from '../assets/ny4.jpg';
+
 
 function Login() {
     const [email, setEmail] = useState("");
@@ -37,62 +39,84 @@ function Login() {
     };
 
     return (
-        <Box
-            sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                minHeight: '100vh',
-                backgroundColor: '#f5f5f5',
-            }}
-        >
-            <Box sx={{
-                maxWidth: 300,
-                border: '2px solid black',
-                padding: 3,
-                backgroundColor: 'white'
-            }}>
-                <Typography variant="h4" component="h4" gutterBottom>
-                    Login Form
-                </Typography>
+        <div>
+            <img
+                src={backgroundImage}
+                alt="background"
+                style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    zIndex: 0, //  se asigură că imaginea este în spate
+                    opacity: 0.95, //  se aplica un nivel de transparență
+                }}
+            />
 
-                <TextField
-                    required
-                    id="email"
-                    label="Email"
-                    value={email}
-                    onChange={handleEmailChange} // Folosește funcția modificată pentru a reseta eroarea
-                    fullWidth
-                    sx={{ marginBottom: 2 }}
-                    error={!!error} // Marchează câmpul ca având o eroare dacă există un mesaj de eroare
-                    helperText={error} // Afișează mesajul de eroare sub câmpul de input
-                />
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    minHeight: '100vh',
+                    // backgroundColor: '#f5f5f5',
+                    zIndex: -1,
+                }}
+            >
 
-                <TextField
-                    required
-                    id="password"
-                    label="Password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    fullWidth
-                    sx={{ marginBottom: 2 }}
-                />
+                <Box sx={{
+                    maxWidth: 300,
+                    border: '2px solid black',
+                    padding: 3,
+                    backgroundColor: 'white'
+                }}>
+                    <Typography variant="h4" component="h4" gutterBottom>
+                        Login Form
+                    </Typography>
 
-                <Button
-                    variant="contained"
-                    onClick={handleLogin}
-                    fullWidth
-                    sx={{ marginBottom: 2 }}
-                >
-                    Login
-                </Button>
-                <Typography variant="body2">
-                    Dacă nu aveți cont, <Link to="/register">Register</Link>
-                </Typography>
+                    <TextField
+                        required
+                        id="email"
+                        label="Email"
+                        value={email}
+                        onChange={handleEmailChange} // Folosește funcția modificată pentru a reseta eroarea
+                        fullWidth
+                        sx={{ marginBottom: 2 }}
+                        error={!!error} // Marchează câmpul ca având o eroare dacă există un mesaj de eroare
+                        helperText={error} // Afișează mesajul de eroare sub câmpul de input
+                    />
+
+                    <TextField
+                        required
+                        id="password"
+                        label="Password"
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        fullWidth
+                        sx={{ marginBottom: 2 }}
+                    />
+
+                    <Button
+                        variant="contained"
+                        onClick={handleLogin}
+                        fullWidth
+                        sx={{ marginBottom: 2 }}
+                    >
+                        Login
+                    </Button>
+                    <Typography variant="body2">
+                        Not have an acount , <Link to="/register">Register</Link>
+                    </Typography>
+                </Box>
             </Box>
-        </Box>
+
+
+
+        </div>
     );
 }
+
 
 export default Login;

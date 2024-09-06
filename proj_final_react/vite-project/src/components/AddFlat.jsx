@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
     TextField, Button, Container, Table, TableBody, TableCell,
-    TableContainer, TableRow, Paper, ToggleButton, ToggleButtonGroup
+    TableContainer, TableRow, ToggleButton, ToggleButtonGroup
 } from '@mui/material';
 import { db } from '../firebase';
 import { collection, addDoc } from 'firebase/firestore';
@@ -130,7 +130,6 @@ function AddFlat() {
                                 />
                             </TableCell>
                         </TableRow>
-
                         <TableRow sx={{ height: '40px' }}>
                             <TableCell sx={{ padding: '10px 8px' }}>
                                 <TextField
@@ -157,9 +156,6 @@ function AddFlat() {
                                 />
                             </TableCell>
                         </TableRow>
-                        {/* <TableRow sx={{ height: '40px' }}>
-                           
-                        </TableRow> */}
                         <TableRow sx={{ height: '40px' }}>
                             <TableCell sx={{ padding: '10px 8px' }}>
                                 <TextField
@@ -173,8 +169,6 @@ function AddFlat() {
                                     helperText={isSubmitted && errors.areaSize}
                                 />
                             </TableCell>
-                        </TableRow>
-                        <TableRow sx={{ height: '40px' }}>
                             <TableCell sx={{ padding: '10px 8px' }}>
                                 <ToggleButtonGroup
                                     value={flatData.ac}
@@ -189,9 +183,6 @@ function AddFlat() {
                                 {isSubmitted && errors.ac && <div style={{ color: 'red', fontSize: '12px' }}>{errors.ac}</div>}
                             </TableCell>
                         </TableRow>
-                        {/* <TableRow sx={{ height: '40px' }}>
-                            
-                        </TableRow> */}
                         <TableRow sx={{ height: '40px' }}>
                             <TableCell sx={{ padding: '10px 8px' }}>
                                 <TextField
@@ -205,8 +196,6 @@ function AddFlat() {
                                     helperText={isSubmitted && errors.rentPrice}
                                 />
                             </TableCell>
-                        </TableRow>
-                        <TableRow sx={{ height: '40px' }}>
                             <TableCell sx={{ padding: '10px 8px' }}>
                                 <TextField
                                     required
@@ -233,9 +222,11 @@ function AddFlat() {
                                         color: 'white',
                                         width: '100px',
                                         height: '30px',
-                                        marginTop: 1
+                                        marginTop: 1,
+                                        left: '50%',
+
                                     }}
-                                // disabled={isFormValid}  // Butonul este dezactivat dacă formularul nu este valid
+
                                 >
                                     Save
                                 </Button>
@@ -252,37 +243,3 @@ export default AddFlat;
 
 
 
-// import * as React from 'react';
-// import Paper from '@mui/material/Paper';
-// import Stack from '@mui/material/Stack';
-// import Box from '@mui/material/Box';
-// import { styled } from '@mui/material/styles';
-
-// const Item = styled(Paper)(({ theme }) => ({
-//   backgroundColor: '#fff',
-//   ...theme.typography.body2,
-//   padding: theme.spacing(1),
-//   textAlign: 'center',
-//   color: theme.palette.text.secondary,
-//   flexGrow: 1,
-//   ...theme.applyStyles('dark', {
-//     backgroundColor: '#1A2027',
-//   }),
-// }));
-
-// export default function FlexboxGapStack() {
-//   return (
-//     <Box sx={{ width: 200 }}>
-//       <Stack
-//         spacing={{ xs: 1, sm: 2 }}
-//         direction="row"
-//         useFlexGap
-//         sx={{ flexWrap: 'wrap' }}
-//       >
-//         <Item>Item 1</Item>
-//         <Item>Item 2</Item>
-//         <Item>Long content</Item>
-//       </Stack>
-//     </Box>
-//   );
-// }

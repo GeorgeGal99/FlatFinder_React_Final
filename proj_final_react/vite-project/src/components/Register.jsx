@@ -5,6 +5,8 @@ import { useAuth } from '../contexts/authContext';
 import { doCreateUserWithEmailAndPassword } from '../auth';
 import { setDoc, doc } from 'firebase/firestore';
 import { db } from '../firebase';
+import backgroundImage from '../assets/ny4.jpg';
+
 
 function Register() {
     const [firstName, setFirstName] = useState("");
@@ -114,8 +116,35 @@ function Register() {
 
 
     return (
+        <Box
+            sx={{
+                maxWidth: 300,
+                margin: 'auto',
+                border: '2px solid black',
+                padding: 3,
+                display: 'flex',
+                flexDirection: 'column', // Elemente pe coloane
+                alignItems: 'center',    // Aliniază orizontal pe centru
+                top: '50%',              // Setează la mijlocul paginii
+                left: '50%',             // Setează la mijloc pe orizontală
+                marginTop: '3%',       // Mu
 
-        <Box sx={{ maxWidth: 300, margin: 'auto', border: '2px solid black', padding: 3 }}>
+            }}
+
+        >
+            <img
+                src={backgroundImage}
+                alt="background"
+                style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    zIndex: -1, //  se asigură că imaginea este în spate
+                    opacity: 0.95, //  se aplica un nivel de transparență
+                }}
+            />
             <Typography variant="h4" component="h4" gutterBottom>
                 Registration Form
             </Typography>
@@ -129,11 +158,8 @@ function Register() {
                 sx={{ marginBottom: 2, width: '250px' }}
                 error={Boolean(errorFirstName)}
                 helperText={errorFirstName}
-
-
-
-
             />
+
             <TextField
                 required
                 id="lastName"
@@ -143,8 +169,8 @@ function Register() {
                 sx={{ marginBottom: 2, width: '250px' }}
                 error={Boolean(errorLastName)}
                 helperText={errorLastName}
-
             />
+
             <TextField
                 required
                 id="birthdate"
@@ -157,6 +183,7 @@ function Register() {
                 error={Boolean(errorBirthdate)}
                 helperText={errorBirthdate}
             />
+
             <TextField
                 required
                 id="email"
@@ -167,6 +194,7 @@ function Register() {
                 error={Boolean(errorMessage)}
                 helperText={errorMessage}
             />
+
             <TextField
                 required
                 id="password"
@@ -178,6 +206,7 @@ function Register() {
                 error={Boolean(errorPassword)}
                 helperText={errorPassword}
             />
+
             <Button
                 variant="contained"
                 onClick={handleClick}
@@ -186,10 +215,13 @@ function Register() {
             >
                 Register
             </Button>
+
             <Typography variant="body2">
-                Aveți cont? <Link to="/login">Login</Link>
+                Have an acount ? <Link to="/login">Login</Link>
             </Typography>
         </Box>
+
+
     );
 }
 
@@ -197,5 +229,3 @@ export default Register;
 
 
 
-//Notite:
-//Am facut validarile dar nu am reusit sa vad de unde vine validarea pe password de la Firebase.
