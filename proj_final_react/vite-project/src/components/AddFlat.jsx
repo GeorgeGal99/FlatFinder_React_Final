@@ -99,7 +99,7 @@ function AddFlat() {
             <TableContainer sx={{
                 width: '650px', padding: 1,
 
-                backgroundColor: 'rgba( 222, 235, 250, 0.6)', // Fundal semi-transparent 
+                backgroundColor: 'rgba( 255, 255, 255, 0.9)', // Fundal semi-transparent 
 
             }}>
                 <Table sx={{ minWidth: 300, }}>

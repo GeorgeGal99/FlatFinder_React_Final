@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
-    Paper, Button, Dialog, DialogActions, DialogContent, DialogTitle
+    IconButton, Button, Dialog, DialogActions, DialogContent, DialogTitle
 } from '@mui/material';
 import { db } from '../firebase';
 import { collection, getDocs, query, where, doc, deleteDoc } from 'firebase/firestore';
 import { useAuth } from '../contexts/authContext';
+import { Delete } from '@mui/icons-material';
+
 
 function FavoriteFlats() {
     const [favoriteFlats, setFavoriteFlats] = useState([]);
@@ -68,7 +70,7 @@ function FavoriteFlats() {
                 <Table>
                     <TableHead
                         sx={{
-                            backgroundColor: 'rgba( 222, 235, 250, 0.6)', // Fundal semi-transparent 
+                            backgroundColor: 'rgba( 255, 255, 255, 1)', // Fundal semi-transparent 
                         }}>
                         <TableRow>
                             <TableCell>City</TableCell>
@@ -98,13 +100,10 @@ function FavoriteFlats() {
                                 <TableCell>{flat.rentPrice}</TableCell>
                                 <TableCell>{flat.dateAvailable}</TableCell>
                                 <TableCell>
-                                    <Button
-                                        variant="outlined"
-                                        color="secondary"
-                                        onClick={() => handleOpenConfirmDelete(flat.id)}
-                                    >
-                                        Delete
-                                    </Button>
+                                    <IconButton onClick={() => handleOpenConfirmDelete(flat.id)}>
+                                        <Delete sx={{ color: 'red' }} />
+                                    </IconButton>
+
                                 </TableCell>
                             </TableRow>
                         ))}
@@ -124,7 +123,7 @@ function FavoriteFlats() {
                     <Button onClick={handleCloseConfirmDelete} color="primary">
                         Cancel
                     </Button>
-                    <Button onClick={handleDelete} color="secondary">
+                    <Button onClick={handleDelete} color="error">
                         Confirm
                     </Button>
                 </DialogActions>

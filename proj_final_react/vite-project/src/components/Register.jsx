@@ -118,6 +118,9 @@ function Register() {
     return (
         <Box
             sx={{
+                border: '2px solid black',
+                backgroundColor: 'white',
+                zIndex: 10,
                 maxWidth: 300,
                 margin: 'auto',
                 border: '2px solid black',
@@ -127,8 +130,8 @@ function Register() {
                 alignItems: 'center',    // Aliniază orizontal pe centru
                 top: '50%',              // Setează la mijlocul paginii
                 left: '50%',             // Setează la mijloc pe orizontală
-                marginTop: '3%',       // Mu
-
+                marginTop: '2.5%',
+                gap: '5px'
             }}
 
         >
@@ -142,10 +145,10 @@ function Register() {
                     width: '100%',
                     height: '100%',
                     zIndex: -1, //  se asigură că imaginea este în spate
-                    opacity: 0.95, //  se aplica un nivel de transparență
+                    opacity: 1, //  se aplica un nivel de transparență
                 }}
             />
-            <Typography variant="h4" component="h4" gutterBottom>
+            <Typography variant="h5" component="h4" gutterBottom>
                 Registration Form
             </Typography>
 
@@ -155,7 +158,7 @@ function Register() {
                 label="First Name"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
-                sx={{ marginBottom: 2, width: '250px' }}
+                sx={{ marginBottom: '5px', width: '300px' }}
                 error={Boolean(errorFirstName)}
                 helperText={errorFirstName}
             />
@@ -166,7 +169,7 @@ function Register() {
                 label="Last Name"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
-                sx={{ marginBottom: 2, width: '250px' }}
+                sx={{ marginBottom: '5px', width: '300px' }}
                 error={Boolean(errorLastName)}
                 helperText={errorLastName}
             />
@@ -179,7 +182,7 @@ function Register() {
                 InputLabelProps={{ shrink: true }}
                 value={birthdate}
                 onChange={(e) => setBirthdate(e.target.value)}
-                sx={{ marginBottom: 2, width: '250px' }}
+                sx={{ marginBottom: '5px', width: '300px' }}
                 error={Boolean(errorBirthdate)}
                 helperText={errorBirthdate}
             />
@@ -190,7 +193,7 @@ function Register() {
                 label="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                sx={{ marginBottom: 2, width: '250px' }}
+                sx={{ marginBottom: '5px', width: '300px' }}
                 error={Boolean(errorMessage)}
                 helperText={errorMessage}
             />
@@ -202,7 +205,7 @@ function Register() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                sx={{ marginBottom: 2, width: '250px' }}
+                sx={{ marginBottom: '5px', width: '300px' }}
                 error={Boolean(errorPassword)}
                 helperText={errorPassword}
             />
@@ -210,7 +213,9 @@ function Register() {
             <Button
                 variant="contained"
                 onClick={handleClick}
-                sx={{ marginBottom: 2, width: '250px' }}
+                sx={{
+                    marginBottom: '5px', width: '200px', display: 'flex'
+                }}
                 disabled={isReg}
             >
                 Register

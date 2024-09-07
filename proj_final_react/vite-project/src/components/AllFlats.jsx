@@ -181,7 +181,7 @@ function AllFlats() {
                                 <Edit />
                             </IconButton>
                             <IconButton onClick={() => handleOpenConfirmDelete(params.row.id)}>
-                                <Delete />
+                                <Delete sx={{ color: 'red' }} />
                             </IconButton>
                         </>
                     )}
@@ -328,6 +328,7 @@ function AllFlats() {
                 )}
 
                 <Dialog
+
                     open={confirmDeleteOpen}
                     onClose={handleCloseConfirmDelete}
                 >
@@ -339,7 +340,7 @@ function AllFlats() {
                         <Button onClick={handleCloseConfirmDelete} color="primary">
                             Cancel
                         </Button>
-                        <Button onClick={handleDeleteFlat} color="secondary">
+                        <Button onClick={handleDeleteFlat} color="error">
                             Confirm
                         </Button>
                     </DialogActions>

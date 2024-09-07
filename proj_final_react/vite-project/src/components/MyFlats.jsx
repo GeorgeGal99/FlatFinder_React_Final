@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import {
-    Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,
+    Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton,
     Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField
 } from '@mui/material';
 import { db } from '../firebase';
 import { collection, query, where, getDocs, doc, deleteDoc, updateDoc, setDoc, getDoc } from 'firebase/firestore';
 import { useAuth } from '../contexts/authContext';
+import { Delete, Edit } from '@mui/icons-material';
+
+
 
 function MyFlats() {
     const { currentUser } = useAuth();
@@ -84,6 +87,9 @@ function MyFlats() {
         }
     };
 
+
+
+
     const handleEditClick = (flat) => {
         setSelectedFlat(flat);
         setEditedFlat(flat);
@@ -129,7 +135,7 @@ function MyFlats() {
                 <Table>
                     <TableHead
                         sx={{
-                            backgroundColor: 'rgba( 222, 235, 250, 0.7)', // Fundal semi-transparent 
+                            backgroundColor: 'rgba( 255, 255, 255, 1)', // Fundal semi-transparent 
 
                         }}>
 
@@ -161,25 +167,21 @@ function MyFlats() {
                                 <TableCell>{flat.dateAvailable}</TableCell>
                                 <TableCell>
                                     <Button
-                                        variant="outlined"
+                                        variant="text"
                                         onClick={() => handleFavorite(flat.id)}
-                                        sx={favoriteButtonStyle(flat.id)}
-                                    >
-                                        Favorite
-                                    </Button>
-                                    <Button
-                                        variant="outlined"
-                                        color="error"
-                                        onClick={() => handleDelete(flat.id)}
-                                    >
-                                        Delete
-                                    </Button>
-                                    <Button
-                                        variant="outlined"
-                                        onClick={() => handleEditClick(flat)}
-                                    >
-                                        Edit
-                                    </Button>
+                                        sx={{ ...favoriteButtonStyle(flat.id), fontSize: '0.6rem' }}
+                                        size="small"
+
+                                    >Favorite</Button>
+
+                                    <IconButton onClick={() => handleDelete(flat.id)}>
+                                        <Delete sx={{ color: 'red' }} />
+                                    </IconButton>
+
+                                    <IconButton onClick={() => handleEditClick(flat)}>
+                                        <Edit />
+                                    </IconButton>
+
                                 </TableCell>
                             </TableRow>
                         ))}
@@ -188,83 +190,85 @@ function MyFlats() {
             </TableContainer>
 
             {/* Modal pentru editarea unui flat */}
-            {selectedFlat && (
-                <Dialog open={editOpen} onClose={handleEditClose}>
-                    <DialogTitle>Edit Flat</DialogTitle>
-                    <DialogContent>
-                        <TextField
-                            margin="dense"
-                            label="City"
-                            name="city"
-                            type="text"
-                            fullWidth
-                            variant="outlined"
-                            value={editedFlat.city || ''}
-                            onChange={handleEditChange}
-                        />
-                        <TextField
-                            margin="dense"
-                            label="Street Name"
-                            name="streetName"
-                            type="text"
-                            fullWidth
-                            variant="outlined"
-                            value={editedFlat.streetName || ''}
-                            onChange={handleEditChange}
-                        />
-                        <TextField
-                            margin="dense"
-                            label="Street Number"
-                            name="streetNumber"
-                            type="text"
-                            fullWidth
-                            variant="outlined"
-                            value={editedFlat.streetNumber || ''}
-                            onChange={handleEditChange}
-                        />
-                        <TextField
-                            margin="dense"
-                            label="Area Size"
-                            name="areaSize"
-                            type="number"
-                            fullWidth
-                            variant="outlined"
-                            value={editedFlat.areaSize || ''}
-                            onChange={handleEditChange}
-                        />
+            {
+                selectedFlat && (
+                    <Dialog open={editOpen} onClose={handleEditClose}>
+                        <DialogTitle>Edit Flat</DialogTitle>
+                        <DialogContent>
+                            <TextField
+                                margin="dense"
+                                label="City"
+                                name="city"
+                                type="text"
+                                fullWidth
+                                variant="outlined"
+                                value={editedFlat.city || ''}
+                                onChange={handleEditChange}
+                            />
+                            <TextField
+                                margin="dense"
+                                label="Street Name"
+                                name="streetName"
+                                type="text"
+                                fullWidth
+                                variant="outlined"
+                                value={editedFlat.streetName || ''}
+                                onChange={handleEditChange}
+                            />
+                            <TextField
+                                margin="dense"
+                                label="Street Number"
+                                name="streetNumber"
+                                type="text"
+                                fullWidth
+                                variant="outlined"
+                                value={editedFlat.streetNumber || ''}
+                                onChange={handleEditChange}
+                            />
+                            <TextField
+                                margin="dense"
+                                label="Area Size"
+                                name="areaSize"
+                                type="number"
+                                fullWidth
+                                variant="outlined"
+                                value={editedFlat.areaSize || ''}
+                                onChange={handleEditChange}
+                            />
 
-                        <TextField
-                            margin="dense"
-                            label="Rent Price"
-                            name="rentPrice"
-                            type="number"
-                            fullWidth
-                            variant="outlined"
-                            value={editedFlat.rentPrice || ''}
-                            onChange={handleEditChange}
-                        />
-                        <TextField
-                            margin="dense"
-                            label="Date Available"
-                            name="dateAvailable"
-                            type="date"
-                            fullWidth
-                            variant="outlined"
-                            value={editedFlat.dateAvailable || ''}
-                            onChange={handleEditChange}
-                            InputLabelProps={{ shrink: true }}
-                        />
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleEditClose} color="primary">
-                            Cancel
-                        </Button>
-                        <Button onClick={handleEditSave} color="primary">
-                            Save
-                        </Button>
-                    </DialogActions>
-                </Dialog>
-            )}
+                            <TextField
+                                margin="dense"
+                                label="Rent Price"
+                                name="rentPrice"
+                                type="number"
+                                fullWidth
+                                variant="outlined"
+                                value={editedFlat.rentPrice || ''}
+                                onChange={handleEditChange}
+                            />
+                            <TextField
+                                margin="dense"
+                                label="Date Available"
+                                name="dateAvailable"
+                                type="date"
+                                fullWidth
+                                variant="outlined"
+                                value={editedFlat.dateAvailable || ''}
+                                onChange={handleEditChange}
+                                InputLabelProps={{ shrink: true }}
+                            />
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={handleEditClose} color="primary">
+                                Cancel
+                            </Button>
+                            <Button onClick={handleEditSave} color="success">
+                                Save
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                )
+            }
 
             {/* Dialog de confirmare stergere */}
             <Dialog
@@ -290,7 +294,7 @@ function MyFlats() {
                     </Button>
                 </DialogActions>
             </Dialog>
-        </div>
+        </div >
     );
 }
 

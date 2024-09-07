@@ -49,8 +49,8 @@ function Login() {
                     left: 0,
                     width: '100%',
                     height: '100%',
-                    zIndex: 0, //  se asigură că imaginea este în spate
-                    opacity: 0.95, //  se aplica un nivel de transparență
+                    zIndex: -1, //  se asigură că imaginea este în spate
+                    opacity: 1, //  se aplica un nivel de transparență
                 }}
             />
 
@@ -60,7 +60,6 @@ function Login() {
                     justifyContent: 'center',
                     alignItems: 'center',
                     minHeight: '100vh',
-                    // backgroundColor: '#f5f5f5',
                     zIndex: -1,
                 }}
             >
@@ -69,7 +68,9 @@ function Login() {
                     maxWidth: 300,
                     border: '2px solid black',
                     padding: 3,
-                    backgroundColor: 'white'
+                    backgroundColor: 'white',
+                    position: 'relative',
+                    zIndex: 10,
                 }}>
                     <Typography variant="h4" component="h4" gutterBottom>
                         Login Form
@@ -102,11 +103,15 @@ function Login() {
                         variant="contained"
                         onClick={handleLogin}
                         fullWidth
-                        sx={{ marginBottom: 2 }}
+                        sx={{ marginBottom: 2, width: '200px', left: '20%' }}
                     >
                         Login
                     </Button>
-                    <Typography variant="body2">
+                    <Typography variant="body2" sx={{
+                        position: 'relative', zIndex: 10, display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                    }} >
                         Not have an acount , <Link to="/register">Register</Link>
                     </Typography>
                 </Box>
