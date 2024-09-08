@@ -14,11 +14,17 @@ import { Link } from "react-router-dom";
 
 
 function AllUsers() {
-    const [users, setUsers] = useState([]);
-    const [open, setOpen] = useState(false);
-    const [selectedUserId, setSelectedUserId] = useState(null);
-    const [activeButton, setActiveButton] = useState(location.pathname);
+    const [users, setUsers] = useState([]);// stochează lista de utilizatori aduși din baza de date.
+    const [open, setOpen] = useState(false); // controlează deschiderea/închiderea unui modal
+    const [selectedUserId, setSelectedUserId] = useState(null);  //stochează ID-ul utilizatorului selectat pentru ștergere
+    const [activeButton, setActiveButton] = useState(location.pathname);   //gestionează butonul activ pe baza rutei curente (location.pathname).
+
+
+    // Folosim useEffect pentru a aduce utilizatorii din baza de date atunci când componenta este montată 
     useEffect(() => {
+
+        // fetchUsers: aduce documentele din colecția users din baza de date Firestore,
+        //  le transformă într-o listă și le stochează în starea users.
         const fetchUsers = async () => {
             try {
                 const usersCollection = collection(db, 'users');
@@ -36,9 +42,14 @@ function AllUsers() {
         fetchUsers();
     }, []);
 
+
+    // Funcția de ștergere a utilizatorului selectat
     const handleDeleteUser = async () => {
         try {
-            if (selectedUserId) {
+            if (selectedUserId) {    //Verifică dacă selectedUserId este definit
+
+                // Șterge utilizatorul din baza de date și actualizează lista de
+                //  utilizatori din starea locală pentru a reflecta ștergerea   
                 await deleteDoc(doc(db, 'users', selectedUserId));
                 setUsers(users.filter(user => user.id !== selectedUserId));
                 console.log('User deleted successfully');
@@ -49,15 +60,18 @@ function AllUsers() {
         }
     };
 
+    // Deschide modalul pentru confirmarea ștergerii unui utilizator și setează ID-ul utilizatorului selectat
     const handleOpenModal = (userId) => {
         setSelectedUserId(userId);
         setOpen(true);
     };
 
+    // Închide modalul fără să facă nicio modificare
     const handleCloseModal = () => {
         setOpen(false);
     };
 
+    // Definește coloanele pentru afișarea datelor utilizatorilor într-un tabel
     const columns = [
         { field: 'email', headerName: 'Email', width: 550 },
         {
@@ -71,6 +85,8 @@ function AllUsers() {
             ),
         },
     ];
+
+    // Stilizează butonul pe baza rutei active
     const buttonStyle = (path) => ({
         backgroundColor: activeButton === path ? '#1976d2' : 'transparent', // Fundalul butonului activ
         color: activeButton === path ? '#ffffff' : '#000000', // Textul butonului activ (alb) sau negru

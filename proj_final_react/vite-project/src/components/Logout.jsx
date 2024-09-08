@@ -5,16 +5,18 @@ import { useNavigate } from 'react-router-dom';
 import LogoutIcon from "@mui/icons-material/Logout";
 
 
+//Definirea Funcției Logout
 const Logout = () => {
-    const [open, setOpen] = useState(false);
-    const navigate = useNavigate();
+    const [open, setOpen] = useState(false);//Creează o stare locală open pentru a controla 
+    //dacă modalul de confirmare este deschis sau închis. Inițial, valoarea este false (modalul este închis).
+    const navigate = useNavigate();//navigarea intre rute
 
-    const handleOpen = () => setOpen(true);
+    const handleOpen = () => setOpen(true);// Funcție care setează starea open la true, deschizând astfel modalul de confirmare.
 
-    const handleClose = () => setOpen(false);
+    const handleClose = () => setOpen(false);//Funcție care setează starea open la false, închizând astfel modalul de confirmare.
 
     const handleLogout = () => {
-        doSignOut().then(() => {
+        doSignOut().then(() => {//gestionează deconectarea utilizatorului.
             navigate('/login');  // Navighează către pagina de login după deconectare
         });
         handleClose();  // Închide modalul după ce utilizatorul a confirmat

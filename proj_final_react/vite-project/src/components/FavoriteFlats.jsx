@@ -9,55 +9,70 @@ import { useAuth } from '../contexts/authContext';
 import { Delete } from '@mui/icons-material';
 
 
+//este o variabilă de stare care stochează lista de apartamente favorite ale utilizatorului. Inițial, este un array gol
 function FavoriteFlats() {
     const [favoriteFlats, setFavoriteFlats] = useState([]);
-    const { currentUser } = useAuth();
+    const { currentUser } = useAuth();  // obține detalii despre utilizatorul curent logat.
 
+    //gestionează deschiderea și închiderea dialogului de 
+    //confirmare pentru ștergerea unui apartament favorit.
     const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
-    const [flatToDelete, setFlatToDelete] = useState(null);
+    const [flatToDelete, setFlatToDelete] = useState(null); // stochează ID-ul apartamentului care urmează să fie șters.
+
 
     useEffect(() => {
+        // obțin referințele apartamentelor favorite ale utilizatorului 
+        // din colecția favorites (care aparține fiecărui utilizator în parte).
         const fetchFavoriteFlats = async () => {
             try {
                 const favoritesCollection = collection(db, 'users', currentUser.uid, 'favorites');
                 const favoritesSnapshot = await getDocs(favoritesCollection);
-                const flatIds = favoritesSnapshot.docs.map(doc => doc.data().flatId);
+                const flatIds = favoritesSnapshot.docs.map(doc => doc.data().flatId);// extrage ID-urile apartamentelor
+                // favorite din documentele recuperate din colecția de favorites.
 
+                // Se creează o interogare către colecția flats folosind ID-urile extrase pentru a recupera detaliile fiecărui apartament favorit. 
                 if (flatIds.length > 0) {
                     const flatsQuery = query(collection(db, 'flats'), where('__name__', 'in', flatIds));
                     const flatsSnapshot = await getDocs(flatsQuery);
                     const flatsList = flatsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    setFavoriteFlats(flatsList);
+                    setFavoriteFlats(flatsList);//actualizare a stării în React, care actualizează variabila de stare favoriteFlats cu o nouă valoare.
                 }
             } catch (error) {
                 console.error('Error fetching favorite flats:', error);
             }
         };
 
-        fetchFavoriteFlats();
-    }, [currentUser]);
+        fetchFavoriteFlats() //;aduce datele din baza de date Firestore cu apartamentele favorite ale utilizatorului curent
+    }, [currentUser]);//reprezintă utilizatorul curent care este autentificat
 
+
+    //Funcția este apelată când utilizatorul dorește să șteargă un apartament favorit.
     const handleOpenConfirmDelete = (flatId) => {
-        setFlatToDelete(flatId);
-        setConfirmDeleteOpen(true);
+        setFlatToDelete(flatId); //setează ID-ul apartamentului care urmează să fie șters.
+        setConfirmDeleteOpen(true);//deschide dialogul de confirmare pentru ștergerea apartamentului.
     };
 
+    //Închide dialogul de confirmare și resetează flatToDelete la null, pentru a preveni orice ștergere accidentală.
     const handleCloseConfirmDelete = () => {
         setConfirmDeleteOpen(false);
         setFlatToDelete(null);
     };
 
+
+    // Șterge apartamentul favorit al utilizatorului
     const handleDelete = async () => {
         try {
-            if (flatToDelete) {
-                // Șterge apartamentul favorit din colecția 'favorites' a utilizatorului
+            if (flatToDelete) { //Verifică dacă există un apartament selectat pentru ștergere (prin intermediul variabilei flatToDelete).
+
+                // Documentul reprezintă apartamentul pe care utilizatorul curent dorește să-l șteargă din lista sa de favorite
                 const favoriteDocRef = doc(db, 'users', currentUser.uid, 'favorites', flatToDelete);
-                await deleteDoc(favoriteDocRef);
+
+                await deleteDoc(favoriteDocRef);//șterge apartamentul favorit din subcolecția favorites a utilizatorului în Firestore.
 
                 // Actualizează starea pentru a elimina apartamentul șters
                 setFavoriteFlats(prevFlats => prevFlats.filter(flat => flat.id !== flatToDelete));
                 console.log('Favorite deleted');
-                handleCloseConfirmDelete();
+                handleCloseConfirmDelete();//Închide dialogul de confirmare.
             }
         } catch (error) {
             console.error('Error deleting favorite:', error);

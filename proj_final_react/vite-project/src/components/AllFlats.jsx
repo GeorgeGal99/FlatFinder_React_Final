@@ -10,20 +10,29 @@ import { useAuth } from '../contexts/authContext';
 import { DataGrid } from '@mui/x-data-grid';
 
 function AllFlats() {
+    // flats și filteredFlats stochează lista de apartamente și versiunea filtrată
     const [flats, setFlats] = useState([]);
     const [filteredFlats, setFilteredFlats] = useState([]);
+    // favoriteFlats stochează apartamentele adăugate la favorite
     const [favoriteFlats, setFavoriteFlats] = useState([]);
+    // currentUser și isAdmin sunt obținute din useAuth() pentru a 
+    // gestiona utilizatorul curent și drepturile de admin
     const { currentUser, isAdmin } = useAuth();
+    // open, message, recipientUid, editOpen, selectedFlat, confirmDeleteOpen,
+    //  și flatToDelete controlează comportamentul diferitelor modale 
+    //  și procese (ex. trimiterea de mesaje, editarea, ștergerea)
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState('');
     const [recipientUid, setRecipientUid] = useState('');
     const [editOpen, setEditOpen] = useState(false);
     const [selectedFlat, setSelectedFlat] = useState(null);
-
     const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
     const [flatToDelete, setFlatToDelete] = useState(null);
 
+
+
     useEffect(() => {
+        // fetchFlats: aduce apartamentele din baza de date și le stochează în state-ul flats  
         const fetchFlats = async () => {
             const flatsCollection = collection(db, 'flats');
             const flatsSnapshot = await getDocs(flatsCollection);
@@ -32,6 +41,8 @@ function AllFlats() {
             setFilteredFlats(flatsList);
         };
 
+        // fetchFavorites: aduce apartamentele favorite ale utilizatorului curent 
+        // din baza de date și le stochează în favoriteFlats
         const fetchFavorites = async () => {
             const favoritesCollection = collection(db, 'users', currentUser.uid, 'favorites');
             const favoritesSnapshot = await getDocs(favoritesCollection);
@@ -43,16 +54,19 @@ function AllFlats() {
         fetchFavorites();
     }, [currentUser]);
 
+    //    functia handleFavorite Verifică dacă apartamentul este deja favorit
     const handleFavorite = async (flatId) => {
         try {
             const userFavoritesRef = doc(db, 'users', currentUser.uid, 'favorites', flatId);
             const favoriteDoc = await getDoc(userFavoritesRef);
 
+            // Dacă este favorit, îl șterge din colecția favorites
             if (favoriteDoc.exists()) {
                 await deleteDoc(userFavoritesRef);
                 setFavoriteFlats(prev => prev.filter(id => id !== flatId));
                 console.log('Removed from favorites');
             } else {
+                // Dacă nu este favorit, îl adaugă.
                 await setDoc(userFavoritesRef, { flatId });
                 setFavoriteFlats(prev => [...prev, flatId]);
                 console.log('Added to favorites');
@@ -62,11 +76,16 @@ function AllFlats() {
         }
     };
 
+
+    // Închide modalul pentru trimiterea unui mesaj și resetează variabilele aferente
     const handleClose = () => {
         setOpen(false);
         setMessage('');
     };
 
+
+    // Trimite un mesaj către proprietarul apartamentului selectat. Verifică dacă
+    //  recipientUid este definit și adaugă un document în colecția messages din baza de date.
     const handleSend = async () => {
         if (!recipientUid) {
             console.error('Recipient UID is undefined. Cannot send message.');
@@ -93,16 +112,20 @@ function AllFlats() {
         }
     };
 
+    // Deschide un dialog de confirmare pentru ștergerea unui apartament specific
     const handleOpenConfirmDelete = (flatId) => {
         setFlatToDelete(flatId);
         setConfirmDeleteOpen(true);
     };
 
+    // Închide dialogul de confirmare și resetează variabilele aferente ștergerii
     const handleCloseConfirmDelete = () => {
         setConfirmDeleteOpen(false);
         setFlatToDelete(null);
     };
 
+    // Șterge apartamentul selectat din baza de date, actualizând și
+    //  state-urile aferente pentru a reflecta modificările în UI.
     const handleDeleteFlat = async () => {
         if (flatToDelete) {
             try {
@@ -117,6 +140,7 @@ function AllFlats() {
         }
     };
 
+    // Setează apartamentul selectat pentru a fi editat și deschide modalul de editare.
     const handleEditFlat = (flat) => {
         if (!flat) {
             console.error('Flat data is not available');
@@ -126,11 +150,14 @@ function AllFlats() {
         setEditOpen(true);
     };
 
+    // Închide modalul de editare și resetează variabilele aferente.
     const handleEditClose = () => {
         setEditOpen(false);
         setSelectedFlat(null);
     };
 
+    // Actualizează apartamentul în baza de date și în
+    //  lista de apartamente, reflectând modificările în UI.
     const handleUpdateFlat = async () => {
         try {
             const flatRef = doc(db, 'flats', selectedFlat.id);
@@ -144,6 +171,9 @@ function AllFlats() {
         }
     };
 
+    // Definirea coloanelor pentru tabelul de apartamente
+    // Codul include validarea operațiunilor de gestionare a apartamentelor și
+    //  a acțiunilor utilizatorilor în funcție de rolul lor (isAdmin).
     const columns = [
         { field: 'city', headerName: 'City', width: 190 },
         { field: 'streetName', headerName: 'Street Name', width: 190 },

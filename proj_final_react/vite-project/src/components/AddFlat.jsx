@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/authContext';
 
 function AddFlat() {
+    // Inițializare starea flatData pentru a stoca datele introduse de utilizator pentru apartament  
     const [flatData, setFlatData] = useState({
         city: '',
         streetName: '',
@@ -20,12 +21,22 @@ function AddFlat() {
         dateAvailable: '',
         ownerEmail: '',
     });
+    // Preluarea utilizatorului curent din contextul de
+    //  autentificare pentru a lega datele apartamentului de acesta
     const { currentUser } = useAuth();
+
+    // Stări pentru gestionarea erorilor de validare (errors), validitatea
+    //  formularului (isFormValid) și dacă formularul a fost trimis (isSubmitted)
     const [errors, setErrors] = useState({});
     const [isFormValid, setIsFormValid] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
+
+    // Hook-ul useNavigate permite redirecționarea între 
+    // pagini după trimiterea cu succes a formularului.
     const navigate = useNavigate();
 
+    // Funcția validate creează un obiect temporar pentru a stoca mesajele de eroare și folosește
+    //  o expresie regulată pentru a valida că anumite câmpuri conțin doar litere
     const validate = () => {
         let tempErrors = {};
         const lettersRegex = /^[A-Za-z]+$/;
@@ -44,6 +55,8 @@ function AddFlat() {
         tempErrors.streetNumber = flatData.streetNumber && !isNaN(flatData.streetNumber) ? "" : "Street Number is required and must be a number.";
         tempErrors.areaSize = flatData.areaSize && !isNaN(flatData.areaSize) && flatData.areaSize > 0 ? "" : "Area Size is required and must be a positive number.";
         tempErrors.ac = flatData.ac ? "" : "AC status is required.";
+
+        // Validează anul construcției să fie un număr între 1800 și anul curent
         const currentYear = new Date().getFullYear();
         tempErrors.yearBuilt = flatData.yearBuilt && !isNaN(flatData.yearBuilt) && flatData.yearBuilt > 1800 && flatData.yearBuilt <= currentYear
             ? ""
@@ -51,21 +64,23 @@ function AddFlat() {
         tempErrors.rentPrice = flatData.rentPrice && !isNaN(flatData.rentPrice) && flatData.rentPrice > 0 ? "" : "Rent Price is required and must be a positive number.";
         tempErrors.dateAvailable = flatData.dateAvailable ? "" : "Date Available is required.";
 
+        // Verifică dacă data disponibilității a fost selectată
         setErrors(tempErrors);
         return Object.values(tempErrors).every(x => x === "");
     };
-
+    // Funcția handleChange actualizează starea flatData cu valorile introduse
+    //  de utilizator și apoi validează formularul după fiecare modificare.
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFlatData(prevData => ({ ...prevData, [name]: value }));
         validate();
     };
-
+    // Gestionează modificările aduse câmpului "dateAvailable" (data disponibilității).
     const handleDateChange = (e) => {
         setFlatData(prevData => ({ ...prevData, dateAvailable: e.target.value }));
         validate();
     };
-
+    // Gestionează modificările stării aerului condiționat (AC)
     const handleACChange = (e, newAC) => {
         if (newAC !== null) {
             setFlatData(prevData => ({ ...prevData, ac: newAC }));
@@ -73,8 +88,15 @@ function AddFlat() {
         }
     };
 
+    // handleSubmit: Funcția de trimitere a formularului.
     const handleSubmit = async (e) => {
+
+        // Se previne comportamentul implicit al formularului. 
+        // Formularul nu se mai trimite automat, astfel încât validarea și alte operațiuni pot fi efectuate
         e.preventDefault();
+
+        // Se validează toate câmpurile. Dacă sunt valide, formularul
+        //  este marcat ca fiind valid și datele sunt trimise la baza de date (flats).
         setIsSubmitted(true);
         if (validate()) {
             setIsFormValid(true);
@@ -85,7 +107,10 @@ function AddFlat() {
                     const flatsCollection = collection(db, 'flats');
                     await addDoc(flatsCollection, flatData1);
                 }
+                // Dacă datele sunt trimise cu succes, utilizatorul este redirecționat către pagina /all-flats  
                 navigate('/all-flats');
+
+                // În caz de eroare la adăugarea datelor, se afișează eroarea în consolă   
             } catch (error) {
                 console.error("Error adding flat: ", error);
             }

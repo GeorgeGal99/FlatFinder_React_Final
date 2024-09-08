@@ -163,7 +163,7 @@ const MyProfiles = () => {
                     <Card
                         sx={{
 
-                            backgroundColor: 'rgba(222, 235, 250,0.5)',
+                            backgroundColor: 'rgba(222, 235, 250,0.7)',
                         }}>
                         <CardContent
                         >

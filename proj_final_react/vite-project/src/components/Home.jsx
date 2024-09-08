@@ -12,26 +12,30 @@ import backgroundImage from '../assets/ny1.jpg';
 
 
 function Home() {
-    const navigate = useNavigate();
-    const { currentUser } = useAuth();
-    const location = useLocation(); // Obține locația curentă
+    const navigate = useNavigate();//navigarea programatică între rute
+    const { currentUser } = useAuth();//returnează informații despre utilizatorul curent
+    const location = useLocation(); // Obține locația curentă a paginii
 
-    const [isAdmin, setIsAdmin] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);// indică dacă utilizatorul curent este administrator
     const [showAllFlats, setShowAllFlats] = useState(true); // Controlează vizibilitatea componentei AllFlats
     const [activeButton, setActiveButton] = useState(location.pathname); // Starea pentru butonul activ
 
+
+    //Se execută doar o dată (când componenta se montează) datorită dependenței goale [].
     useEffect(() => {
-        if (!currentUser) {
+        if (!currentUser) {//Dacă utilizatorul nu este autentificat, se redirecționează la pagina de autentificare.
             navigate('/login');
         } else {
-            checkAdminStatus();
-            fetchUsers();
+            checkAdminStatus();// Funcții care se apelează dacă utilizatorul este autentificat.
+            fetchUsers();// Funcții care se apelează dacă utilizatorul este autentificat.
         }
     }, []);
 
+
+    //: Se execută de fiecare dată când location se schimbă.
     useEffect(() => {
-        // Actualizează vizibilitatea lui AllFlats în funcție de ruta curentă
-        if (location.pathname === '/') {
+
+        if (location.pathname === '/') {  // Actualizare vizibilitate AllFlats: Dacă ruta curentă este /, atunci AllFlats este vizibilă, altfel nu.
             setShowAllFlats(true);
         } else {
             setShowAllFlats(false);
@@ -41,12 +45,16 @@ function Home() {
         setActiveButton(location.pathname);
     }, [location]);
 
+
+    // Preia lista utilizatorilor din colecția users din baza de date și o stochează într-o variabilă.
     const fetchUsers = async () => {
         const usersCollection = collection(db, "users");
         const usersSnapshot = await getDocs(usersCollection);
         const usersList = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     };
 
+
+    //Verifică dacă utilizatorul curent este administrator și actualizează starea isAdmin în funcție de aceasta.
     const checkAdminStatus = async () => {
         if (currentUser) {
             const userDoc = doc(db, "users", currentUser.uid);
@@ -58,6 +66,8 @@ function Home() {
         }
     };
 
+
+    // Funcție care returnează stilurile pentru butoane, bazate pe ruta curentă (path)
     const buttonStyle = (path) => ({
         backgroundColor: activeButton === path ? '#1976d2' : 'transparent', // Fundalul butonului activ
         color: activeButton === path ? '#ffffff' : '#000000', // Textul butonului activ (alb) sau negru

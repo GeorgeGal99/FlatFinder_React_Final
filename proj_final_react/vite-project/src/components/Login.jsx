@@ -6,17 +6,25 @@ import backgroundImage from '../assets/ny4.jpg';
 
 
 function Login() {
+
+    // definim trei stări (email, password, error) folosind useState pentru a
+    //  gestiona valorile emailului, parolei și mesajele de eroare.
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(""); // Mesajul de eroare
-
+    // useNavigate este un hook din react-router-dom care permite redirecționarea între pagini.
     const navigate = useNavigate();
 
+    // funcția principală care  autentifica utilizatorul.
     const handleLogin = async () => {
+
         try {
             setError(""); // Resetează mesajul de eroare înainte de a încerca autentificarea
+            // doSignInWithEmailAndPassword (legată de Firebase) este apelată pentru a face autentificarea.
             await doSignInWithEmailAndPassword(email, password);
-            navigate('/'); // Redirecționează la pagina principală
+            navigate('/'); // Redirecționează la pagina principală,daca autentificarea are succes
+
+            //Dacă autentificarea eșuează ,codul analizează tipul erorii și actualizează starea error cu mesajul corespunzător.
         } catch (error) {
             console.error("Login failed:", error);
 
@@ -32,7 +40,8 @@ function Login() {
             }
         }
     };
-
+    // Functia handleEmailChange: Când utilizatorul modifica emailul, valoarea emailului
+    // este actualizată, iar mesajul de eroare este resetat
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
         setError(""); // Resetează mesajul de eroare la modificarea emailului

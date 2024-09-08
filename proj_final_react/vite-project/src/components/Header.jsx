@@ -5,6 +5,10 @@ import { Button, Typography, AppBar, Toolbar } from '@mui/material';
 import Logout from './Logout';
 import HomeIcon from "@mui/icons-material/Home";
 
+
+// autentificare, informații cheie despre utilizatorul curent:
+// obiectul currentUser, starea de autentificare userLoggedIn, și dacă acesta este administrator isAdmin. 
+//Aceste informații sunt folosite ulterior în componentă pentru a personaliza interfața 
 function Header() {
     const { currentUser, userLoggedIn, isAdmin } = useAuth();
 
