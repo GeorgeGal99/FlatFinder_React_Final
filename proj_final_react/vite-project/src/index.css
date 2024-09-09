@@ -3,3 +3,10 @@ html {
     margin: 0;
     height: 100vh;
 }
+
+.test {
+    background-image: url('./assets/ny1.jpg');
+    min-height: 100vh;
+    height: auto;
+
+}

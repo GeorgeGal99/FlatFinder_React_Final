@@ -12,57 +12,68 @@ import backgroundImage from '../assets/ny1.jpg';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 
 function Messages() {
-    const { currentUser } = useAuth();
-    const [messages, setMessages] = useState([]);
-    const [open, setOpen] = useState(false);
-    const [replyMessage, setReplyMessage] = useState('');
-    const [recipientUid, setRecipientUid] = useState('');
+    const { currentUser } = useAuth();//Obține detaliile despre utilizatorul curent, prin hook-ul de autentificare.
+    const [messages, setMessages] = useState([]);//Stochează lista de mesaje
+    const [open, setOpen] = useState(false);//Controlează dacă formularul de răspuns este deschis
+    const [replyMessage, setReplyMessage] = useState('');//Se referă la mesajul de răspuns, UID-ul destinatarului și
+    // apartamentul selectat pentru care se trimite mesajul.
+    const [recipientUid, setRecipientUid] = useState('');//Controlează deschiderea unui dialog de confirmare pentru
+    //ștergerea unui mesaj și identifică mesajul ce urmează a fi șters.
     const [selectedFlat, setSelectedFlat] = useState(null);
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [messageToDelete, setMessageToDelete] = useState(null);
-    const [newMessages, setNewMessages] = useState(0); // Pentru a contoriza mesajele noi
-    const [lastChecked, setLastChecked] = useState(Timestamp.now()); // Ultima verificare
-    const [dialogMessage, setDialogMessage] = useState(null); // Mesajul selectat pentru dialog
-    const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [newMessages, setNewMessages] = useState(0); // Pentru a contoriza mesajele noi necitite
+    const [lastChecked, setLastChecked] = useState(Timestamp.now()); //  Data ultimei verificări a mesajelor (folosită pentru a determina mesajele noi).
+    const [dialogMessage, setDialogMessage] = useState(null); //Mesajul selectat pentru afișare detaliată.
+    const [page, setPage] = useState(0);//Controlează paginarea mesajelor afișate
+    const [rowsPerPage, setRowsPerPage] = useState(10);//Controlează paginarea mesajelor afișate
 
     useEffect(() => {
 
+        //Funcție care preia mesajele din baza de date pentru utilizatorul curent și,
+        // dacă este cazul, și informațiile despre apartamentele asociate fiecărui mesaj.
         const fetchMessages = async () => {
 
             try {
-                if (!currentUser) return;
 
-                const messagesCollection = collection(db, 'messages');
-                const q = query(messagesCollection, where('recipientUid', '==', currentUser.uid));
-                const messagesSnapshot = await getDocs(q);
+                if (!currentUser) return;//Verificarea utilizatorului curent
+
+                const messagesCollection = collection(db, 'messages');//colecție în care sunt stocate toate mesajele din aplicație. Folosind funcția collection
+                //din Firebase Firestore, accesăm baza de date (db) și colecția specificată (messages).
+                const q = query(messagesCollection, where('recipientUid', '==', currentUser.uid));// Construiește o interogare care filtrează datele din colecția messages
+                // Adaugă o condiție la interogare:Este un câmp din documentele colecției messages care conține UID-ul destinatarului fiecărui mesaj.
+                //currentUser.uid: UID-ul utilizatorului conectat (obținut din contextul de autentificare).
+                const messagesSnapshot = await getDocs(q);// aduce datele din colecția messages filtrate după UID-ul destinatarului.
                 const messagesList = await Promise.all(
-                    messagesSnapshot.docs.map(async (docSnap) => {
-                        const messageData = docSnap.data();
+                    messagesSnapshot.docs.map(async (docSnap) => {//Se parcurg toate documentele returnate de interogare,
+                        const messageData = docSnap.data();//Pentru fiecare document, se extrag datele (.data)
                         let flatData = null;
-                        // Verificăm dacă există `flatId` în datele mesajului
-                        if (messageData.flatId) {
-                            const flatRef = doc(db, 'flats', messageData.flatId);
-                            const flatDoc = await getDoc(flatRef);
-                            if (flatDoc.exists()) {
-                                flatData = flatDoc.data();
-                                setSelectedFlat(flatDoc.data());
+                        console.log(messageData);
+                        if (messageData.flatsList?.flatsId || messageData.flatList?.flatsId) { // Verificăm dacă există `flatsId` în datele mesajului
+                            let id = messageData.flatsList?.flatsId || messageData.flatList?.flatsId;
+                            const flatRef = doc(db, 'flats', messageData.flatsList?.flatsId || messageData.flatList?.flatsId);//Această funcție este folosită pentru a crea o referință la un document specific din Firebase Firestore.
+                            const flatDoc = await getDoc(flatRef);// Această funcție este folosită pentru a prelua documentul(await) la care face referință flatRef din Firestore.
+                            if (flatDoc.exists()) {//, verificăm dacă documentul există efectiv în Firestore.
+                                // Returnează true dacă documentul există în baza de date, și false dacă nu există.
+                                flatData = flatDoc.data();//extrage efectiv datele stocate în documentul apartamentului si salveaza cu flatData
+                                console.log(flatData);
+                                setSelectedFlat({ ...flatData, flatsID: id });// funcția setSelectedFlat pentru a actualiza starea locală selectedFlat cu datele apartamentului extrase.
                             }
 
                         }
 
                         return {
-                            id: docSnap.id,
-                            ...messageData,
-                            flat: flatData,
+                            id: docSnap.id,// ID-ul unic al mesajului.
+                            ...messageData,// Toate datele originale ale mesajului (expuse prin operatorul spread).
+                            flat: flatData,//Informațiile despre apartamentul asociat, dacă există.
 
                         };
                     })
                 );
 
-                setMessages(messagesList);
-                setNewMessages(messagesList.filter(message => !message.read).length);
-                setLastChecked(Timestamp.now());
+                setMessages(messagesList);//starea messages este actualizată cu lista de mesaje (messagesList).
+                setNewMessages(messagesList.filter(message => !message.read).length);//numără toate mesajele din messagesList care nu au fost citite
+                setLastChecked(Timestamp.now());//setează un timestamp (Timestamp.now()) pentru a marca momentul ultimei verificări
             } catch (error) {
                 console.error('Error fetching messages:', error);
             }
@@ -102,7 +113,7 @@ function Messages() {
                 return;
 
             }
-
+            console.log(selectedFlat);
             await addDoc(collection(db, 'messages'), {
                 ownerEmail: currentUser.email,
                 senderUid: currentUser.uid,
@@ -112,7 +123,8 @@ function Messages() {
                 flatList: {
                     city: selectedFlat.city || 'Unknown',
                     streetName: selectedFlat.streetName || 'Unknown',
-                    streetNumber: selectedFlat.streetNumber || 'Unknown'
+                    streetNumber: selectedFlat.streetNumber || 'Unknown',
+                    flatsId: selectedFlat.flatsID || 'Unknown'
                 }
             });
 
@@ -128,11 +140,12 @@ function Messages() {
     const handleReply = (senderUid, flat) => {
 
         setRecipientUid(senderUid);
-        setSelectedFlat(flat);
+
         setOpen(true);
     };
 
     const handleOpenMessage = async (message) => {
+
         setDialogMessage(message);
 
         // Mark the message as read
@@ -180,8 +193,8 @@ function Messages() {
 
 
     return (
-        <div>
-            <img
+        <div className='test'>
+            {/* <img
                 src={backgroundImage}
                 alt="background"
                 style={{
@@ -189,11 +202,11 @@ function Messages() {
                     top: 0,
                     left: 0,
                     width: '100%',
-                    height: '100%',
+                    height: '100vh',
                     zIndex: -1,
                     opacity: 0.95,
                 }}
-            />
+            /> */}
             <Header />
             <IconButton color="inherit" style={{ float: 'right' }}>
                 <Badge badgeContent={newMessages} color="error">

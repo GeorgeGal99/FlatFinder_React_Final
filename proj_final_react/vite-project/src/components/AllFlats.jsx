@@ -102,7 +102,8 @@ function AllFlats() {
                 flatsList: {
                     city: selectedFlat.city || 'Unknown',
                     streetName: selectedFlat.streetName || 'Unknown',
-                    streetNumber: selectedFlat.streetNumber || 'Unknown'
+                    streetNumber: selectedFlat.streetNumber || 'Unknown',
+                    flatsId: selectedFlat.id || 'Unknown'
                 }
             });
             console.log('Message sent successfully');
@@ -198,6 +199,7 @@ function AllFlats() {
                             onClick={() => {
                                 setRecipientUid(params.row.ownerUid);
                                 setSelectedFlat(params.row);
+
                                 setOpen(true);
                             }}
                         >
