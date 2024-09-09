@@ -48,20 +48,7 @@ function Login() {
     };
 
     return (
-        <div>
-            <img
-                src={backgroundImage}
-                alt="background"
-                style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    height: '100%',
-                    zIndex: -1, //  se asigură că imaginea este în spate
-                    opacity: 1, //  se aplica un nivel de transparență
-                }}
-            />
+        <div className='test'>
 
             <Box
                 sx={{
@@ -70,10 +57,13 @@ function Login() {
                     alignItems: 'center',
                     minHeight: '100vh',
                     zIndex: -1,
+
                 }}
             >
 
                 <Box sx={{
+
+
                     maxWidth: 300,
                     border: '2px solid black',
                     padding: 3,

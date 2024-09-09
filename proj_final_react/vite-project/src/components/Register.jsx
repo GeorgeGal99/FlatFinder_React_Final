@@ -5,7 +5,7 @@ import { useAuth } from '../contexts/authContext';
 import { doCreateUserWithEmailAndPassword } from '../auth';
 import { setDoc, doc } from 'firebase/firestore';
 import { db } from '../firebase';
-import backgroundImage from '../assets/ny4.jpg';
+
 
 
 function Register() {
@@ -116,117 +116,110 @@ function Register() {
 
 
     return (
-        <Box
-            sx={{
-                border: '2px solid black',
-                backgroundColor: 'white',
-                zIndex: 10,
-                maxWidth: 300,
-                margin: 'auto',
-                border: '2px solid black',
-                padding: 3,
-                display: 'flex',
-                flexDirection: 'column', // Elemente pe coloane
-                alignItems: 'center',    // Aliniază orizontal pe centru
-                top: '50%',              // Setează la mijlocul paginii
-                left: '50%',             // Setează la mijloc pe orizontală
-                marginTop: '2.5%',
-                gap: '5px'
-            }}
-
-        >
-            <img
-                src={backgroundImage}
-                alt="background"
-                style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    height: '100%',
-                    zIndex: -1, //  se asigură că imaginea este în spate
-                    opacity: 1, //  se aplica un nivel de transparență
-                }}
-            />
-            <Typography variant="h5" component="h4" gutterBottom>
-                Registration Form
-            </Typography>
-
-            <TextField
-                required
-                id="firstName"
-                label="First Name"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                sx={{ marginBottom: '5px', width: '300px' }}
-                error={Boolean(errorFirstName)}
-                helperText={errorFirstName}
-            />
-
-            <TextField
-                required
-                id="lastName"
-                label="Last Name"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                sx={{ marginBottom: '5px', width: '300px' }}
-                error={Boolean(errorLastName)}
-                helperText={errorLastName}
-            />
-
-            <TextField
-                required
-                id="birthdate"
-                label="Birthdate"
-                type="date"
-                InputLabelProps={{ shrink: true }}
-                value={birthdate}
-                onChange={(e) => setBirthdate(e.target.value)}
-                sx={{ marginBottom: '5px', width: '300px' }}
-                error={Boolean(errorBirthdate)}
-                helperText={errorBirthdate}
-            />
-
-            <TextField
-                required
-                id="email"
-                label="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                sx={{ marginBottom: '5px', width: '300px' }}
-                error={Boolean(errorMessage)}
-                helperText={errorMessage}
-            />
-
-            <TextField
-                required
-                id="password"
-                label="Password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                sx={{ marginBottom: '5px', width: '300px' }}
-                error={Boolean(errorPassword)}
-                helperText={errorPassword}
-            />
-
-            <Button
-                variant="contained"
-                onClick={handleClick}
+        <div className='test1'>
+            <Box
                 sx={{
-                    marginBottom: '5px', width: '200px', display: 'flex'
+                    position: 'absolute',
+                    border: '2px solid black',
+                    backgroundColor: 'white',
+                    zIndex: 10,
+                    maxWidth: 300,
+                    margin: 'auto',
+                    border: '2px solid black',
+                    padding: 3,
+                    display: 'flex',
+                    flexDirection: 'column', // Elemente pe coloane
+                    alignItems: 'center',    // Aliniază orizontal pe centru
+                    left: '35%',             // Setează la mijloc pe orizontală
+                    top: '10%',
+                    // marginTop: '100px',
+
+                    gap: '5px',
+
                 }}
-                disabled={isReg}
+
             >
-                Register
-            </Button>
-
-            <Typography variant="body2">
-                Have an acount ? <Link to="/login">Login</Link>
-            </Typography>
-        </Box>
 
 
+                <Typography variant="h5" component="h4" gutterBottom>
+                    Registration Form
+                </Typography>
+
+                <TextField
+                    required
+                    id="firstName"
+                    label="First Name"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    sx={{ marginBottom: '5px', width: '300px' }}
+                    error={Boolean(errorFirstName)}
+                    helperText={errorFirstName}
+                />
+
+                <TextField
+                    required
+                    id="lastName"
+                    label="Last Name"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    sx={{ marginBottom: '5px', width: '300px' }}
+                    error={Boolean(errorLastName)}
+                    helperText={errorLastName}
+                />
+
+                <TextField
+                    required
+                    id="birthdate"
+                    label="Birthdate"
+                    type="date"
+                    InputLabelProps={{ shrink: true }}
+                    value={birthdate}
+                    onChange={(e) => setBirthdate(e.target.value)}
+                    sx={{ marginBottom: '5px', width: '300px' }}
+                    error={Boolean(errorBirthdate)}
+                    helperText={errorBirthdate}
+                />
+
+                <TextField
+                    required
+                    id="email"
+                    label="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    sx={{ marginBottom: '5px', width: '300px' }}
+                    error={Boolean(errorMessage)}
+                    helperText={errorMessage}
+                />
+
+                <TextField
+                    required
+                    id="password"
+                    label="Password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    sx={{ marginBottom: '5px', width: '300px' }}
+                    error={Boolean(errorPassword)}
+                    helperText={errorPassword}
+                />
+
+                <Button
+                    variant="contained"
+                    onClick={handleClick}
+                    sx={{
+                        marginBottom: '5px', width: '200px', display: 'flex'
+                    }}
+                    disabled={isReg}
+                >
+                    Register
+                </Button>
+
+                <Typography variant="body2">
+                    Have an acount ? <Link to="/login">Login</Link>
+                </Typography>
+            </Box>
+
+        </div >
     );
 }
 
