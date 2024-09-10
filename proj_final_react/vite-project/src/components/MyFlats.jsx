@@ -11,36 +11,46 @@ import { Delete, Edit } from '@mui/icons-material';
 
 
 function MyFlats() {
-    const { currentUser } = useAuth();
-    const [flats, setFlats] = useState([]);
-    const [editOpen, setEditOpen] = useState(false);
-    const [selectedFlat, setSelectedFlat] = useState(null);
-    const [editedFlat, setEditedFlat] = useState({});
-    const [favoriteFlats, setFavoriteFlats] = useState(new Set());
-    const [deleteOpen, setDeleteOpen] = useState(false);
-    const [flatToDelete, setFlatToDelete] = useState(null);
+    const { currentUser } = useAuth();//obține detaliile utilizatorului autentificat.
+    const [flats, setFlats] = useState([]);// stochează lista de apartamente ale utilizatorului.
+    const [editOpen, setEditOpen] = useState(false);//controlează dacă formularul de editare este deschis sau închis.
+    const [selectedFlat, setSelectedFlat] = useState(null);//stochează apartamentul selectat pentru editare
+    const [editedFlat, setEditedFlat] = useState({});// stochează datele apartamentului în timp ce acesta este editat.
+    const [favoriteFlats, setFavoriteFlats] = useState(new Set());// stochează setul de ID-uri ale apartamentelor favorite ale
+    // utilizatorului Folosește un Set pentru a evita duplicarea
+    const [deleteOpen, setDeleteOpen] = useState(false);//controlează dacă formularul de confirmare a ștergerii este deschis sau închis
+    const [flatToDelete, setFlatToDelete] = useState(null);//stochează ID-ul apartamentului care urmează să fie șters
 
-    useEffect(() => {
+
+    //obține date despre apartamente și favoritele utilizatorului din baza de date
+    useEffect(() => { //obține apartamentele care aparțin utilizatorului curent.
         const fetchFlats = async () => {
-            const flatsCollection = collection(db, 'flats');
-            const q = query(flatsCollection, where('ownerUid', '==', currentUser.uid));
-            const flatsSnapshot = await getDocs(q);
-            const flatsList = flatsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            setFlats(flatsList);
+            const flatsCollection = collection(db, 'flats');  // referinta la colecția flats din baza de date Firestore.
+            const q = query(flatsCollection, where('ownerUid', '==', currentUser.uid));// Creează o interogare pentru a obține doar apartamentele
+            // al căror câmp ownerUid este egal cu ID-ul utilizatorului curent (currentUser.uid).
+            const flatsSnapshot = await getDocs(q);//Transformă fiecare document într-un obiect care include ID-ul documentului și datele acestuia.
+            const flatsList = flatsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));//transforma fiecare document obținut de la interogarea 
+            // Firestore într-un obiect JavaScript care conține datele dorite
+            setFlats(flatsList);//Actualizează starea flats cu lista de apartamente obținută
         };
 
-        fetchFlats();
-    }, [currentUser.uid]);
+        fetchFlats();//Actualizează starea flats cu lista de apartamente obținută
+    }, [currentUser.uid]);// Efectul se va reactiva atunci când currentUser.uid se schimbă,
+    // asigurându-se că apartamentele afișate sunt actualizate pentru utilizatorul curent.
 
-    useEffect(() => {
+
+    //Obținerea apartamentelor favorite ale utilizatorului
+    useEffect(() => {//se execută de fiecare dată când currentUser.uid se schimbă.
+        // Este folosit pentru a obține lista de apartamente favorite ale utilizatorului curent.
         const fetchFavorites = async () => {
-            const userFavoritesRef = collection(db, 'users', currentUser.uid, 'favorites');
-            const favoritesSnapshot = await getDocs(userFavoritesRef);
-            const favoritesList = new Set(favoritesSnapshot.docs.map(doc => doc.id));
-            setFavoriteFlats(favoritesList);
+            const userFavoritesRef = collection(db, 'users', currentUser.uid, 'favorites');// Se referă la colecția favorites a utilizatorului curent
+            // localizată în subcolecția users/{currentUser.uid}/favorites.
+            const favoritesSnapshot = await getDocs(userFavoritesRef);//Obține documentele din colecția favorites a utilizatorului
+            const favoritesList = new Set(favoritesSnapshot.docs.map(doc => doc.id));//Transformă fiecare document într-un ID de apartament favorit.
+            setFavoriteFlats(favoritesList);// Actualizează starea favoriteFlats cu setul de ID-uri ale apartamentelor favorite.
         };
 
-        fetchFavorites();
+        fetchFavorites();//Actualizează starea favorite 
     }, [currentUser.uid]);
 
 
@@ -64,22 +74,26 @@ function MyFlats() {
         }
     };
 
+    // seteaza starea de favorit al unui apartament pentru utilazatorul curent,dar daca apart este in lista de fav a utilizatorului
+    // va fi eliminat,daca nu este in lista  de favorite va fi adaugat
     const handleFavorite = async (flatId) => {
         try {
-            const userFavoritesRef = doc(db, 'users', currentUser.uid, 'favorites', flatId);
-            const favoriteDoc = await getDoc(userFavoritesRef);
+            const userFavoritesRef = doc(db, 'users', currentUser.uid, 'favorites', flatId);//reprezintă starea de favorit a apartamentului cu ID-ul flatId.
+            const favoriteDoc = await getDoc(userFavoritesRef);//. Verificarea Dacă Apartamentul Este Deja Favorit
 
-            if (favoriteDoc.exists()) {
-                await deleteDoc(userFavoritesRef);
-                setFavoriteFlats(prev => {
-                    const updatedFavorites = new Set(prev);
-                    updatedFavorites.delete(flatId);
+            // Gestionarea Cazului În Care Apartamentul Este Deja Favorit
+            if (favoriteDoc.exists()) {// verifică dacă documentul există în baza de date.
+                await deleteDoc(userFavoritesRef);//șterge documentul, eliminând apartamentul din lista de favorite a utilizatorului.
+                setFavoriteFlats(prev => { //actualizează starea locală favoriteFlats. 
+                    const updatedFavorites = new Set(prev);//creează un nou Set care conține elementele anterioare, dar fără apartamentul eliminat
+                    updatedFavorites.delete(flatId);//elimină apartamentul din setul de favorite și se returnează noul set actualizat.
                     return updatedFavorites;
                 });
                 console.log('Removed from favorites');
-            } else {
-                await setDoc(userFavoritesRef, { flatId });
-                setFavoriteFlats(prev => new Set(prev).add(flatId));
+
+            } else {  // Gestionarea Cazului În Care Apartamentul Nu Este Favorit
+                await setDoc(userFavoritesRef, { flatId });// creează un nou document cu ID-ul apartamentului în colecția de favorite.
+                setFavoriteFlats(prev => new Set(prev).add(flatId));//creează un nou Set care conține elementele anterioare și se adaugă ID-ul apartamentului ca favorit.
                 console.log('Added to favorites');
             }
         } catch (error) {
@@ -89,23 +103,28 @@ function MyFlats() {
 
 
 
-
+    // deschide un formular de editare pentru un apartament
     const handleEditClick = (flat) => {
+        selectat
         setSelectedFlat(flat);
         setEditedFlat(flat);
         setEditOpen(true);
     };
 
+    //închide modulul de editare și resetarea stării asociate cu editarea unui apartament
     const handleEditClose = () => {
         setEditOpen(false);
         setSelectedFlat(null);
     };
 
+    // gestiona modificările în formularele de editare a unui apartament. 
     const handleEditChange = (e) => {
         const { name, value } = e.target;
         setEditedFlat(prevState => ({ ...prevState, [name]: value }));
     };
 
+
+    // salva modificările efectuate asupra unui apartament și a actualiza datele atât în baza de date Firebase, cât și în starea locală 
     const handleEditSave = async () => {
         try {
             const flatRef = doc(db, 'flats', editedFlat.id);
@@ -118,6 +137,7 @@ function MyFlats() {
         }
     };
 
+    // culoarea butoanelor un functie daca este favorit sau nu
     const favoriteButtonStyle = (flatId) => ({
         backgroundColor: favoriteFlats.has(flatId) ? '#1976d2' : 'transparent',
         color: favoriteFlats.has(flatId) ? '#ffffff' : '#000000',

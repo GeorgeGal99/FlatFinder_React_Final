@@ -78,23 +78,27 @@ function Messages() {
             }
         };
 
-        fetchMessages();
+        fetchMessages();//aduce mesajele din Firestore care sunt destinate utilizatorului curent, 
+        //și, dacă mesajul este asociat unui apartament
     }, [currentUser]);
 
-    const handleDeleteMessage = async () => {
-        try {
-            await deleteDoc(doc(db, 'messages', messageToDelete));
-            setMessages(messages.filter(message => message.id !== messageToDelete));
-            setConfirmOpen(false);
+
+
+    const handleDeleteMessage = async () => {//funcție asincronă care va gestiona ștergerea unui mesaj selectatdin Firestore
+        try {//Blochează codul care va încerca să șteargă un mesaj
+            await deleteDoc(doc(db, 'messages', messageToDelete));//asteapta finalizarea stergerii din Firestore,
+            //(deleteDoc) sterge documentul specificat din colectia mesages  din data base cu id-ul egal messageToDelete
+            setMessages(messages.filter(message => message.id !== messageToDelete));//actualizăm starea locală a mesajelor
+            setConfirmOpen(false);//După ștergerea mesajului, se închide dialogul de confirmare 
             console.log('Message deleted');
         } catch (error) {
             console.error('Error deleting message:', error);
         }
     };
 
-    const handleSendReply = async () => {
-        console.log(recipientUid);
-        console.log(selectedFlat);
+
+
+    const handleSendReply = async () => {//funcție asincronă definită pentru a trimite un răspuns sub forma unui mesaj
 
         try {
             if (!currentUser) {
@@ -112,8 +116,10 @@ function Messages() {
                 return;
 
             }
-            console.log(selectedFlat);
-            await addDoc(collection(db, 'messages'), {
+
+            await addDoc(collection(db, 'messages'), {//adaugă un nou document într-o colecție specificată din baza de date.
+                // db reprezintă instanța bazei de date Firestore conectată la aplicația 
+                //datele vor fi stocate in documentul creat 'messages'
                 ownerEmail: currentUser.email,
                 senderUid: currentUser.uid,
                 recipientUid: recipientUid,
@@ -136,51 +142,67 @@ function Messages() {
         }
     };
 
-    const handleReply = (senderUid, flat) => {
 
-        setRecipientUid(senderUid);
 
-        setOpen(true);
+    const handleReply = (senderUid, flat) => { //handleReply este un handler (manipulator) de eveniment care 
+        // este apelată atunci când utilizatorul dorește să răspundă la un mesaj primit
+        setRecipientUid(senderUid);//funcție de state setter care actualizează valoarea pentru starea recipientUid din componentă.
+        setOpen(true);// deschide modalul ca rspuns la mesaj
     };
 
-    const handleOpenMessage = async (message) => {
 
-        setDialogMessage(message);
+    const handleOpenMessage = async (message) => {//Funcția primește un parametru message, care reprezintă obiectul
+        // ce conține informațiile mesajului pe care utilizatorul îl dorește deschis.
 
-        // Mark the message as read
+        setDialogMessage(message);// actualizeaza variabila de stare dialogMessage
+        //salvează informațiile mesajului primit si afiseaza in modal
+
+        //Actualizarea listei de mesaje
         try {
-            await updateDoc(doc(db, 'messages', message.id), {
+            await updateDoc(doc(db, 'messages', message.id), {//actualizează documentul specific din colecția messages din baza de date Firestore.
                 read: true
             });
+            //Actualizăm starea componentei pentru lista de mesaje. 
             setMessages(messages.map(msg =>
                 msg.id === message.id ? { ...msg, read: true } : msg
             ));
-            // setNewMessages(newMessages - 1);
+            //Actualizează starea care ține cont de câte mesaje necitite există.
             setNewMessages(prevCount => Math.max(prevCount - 1, 0));
         } catch (error) {
             console.error('Error updating message status:', error);
         }
     };
 
-    const handleClose = () => {
+
+    //funcție este utilizată pentru a închide un formular sau o fereastră modală
+    const handleClose = () => {//închide interfața cu utilizatorul (UI) și pentru a reseta mesajul de răspuns.
         setOpen(false);
-        setReplyMessage('');
+        setReplyMessage('');// funcție de tip setter, care modifică starea locală replyMessage.
     };
 
+
+    // functie pentru deschiderea unui modal de confirmare stergere mesaj
     const handleOpenConfirm = (messageId) => {
         setMessageToDelete(messageId);
         setConfirmOpen(true);
     };
 
+
+    //functie pentru inchiderea  unui modal de confirmare atunci cand utilizatorul nu vrea sa stearga mesajul
     const handleCloseConfirm = () => {
         setConfirmOpen(false);
         setMessageToDelete(null);
     };
 
+
+    //functie pentru a actualiza pagina curenta intr-o inerfata care utilizeaza paginare si poti apasa un buton sa schimbi pagina  
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
 
+
+    // functie actualizeaza numărul de rânduri afișate pe pagină într-un tabel sau într-o listă paginată.
+    //Este apelată atunci când utilizatorul schimbă opțiunea de nr de randuri pe pagina 
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
